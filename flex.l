@@ -19,7 +19,10 @@ ID    [a-zA-Z][a-zA-Z0-9]*
 
 %%
 
-\+|\-|\*|\/|\^ { return yytext[0]; }
+"+" return PLUS
+"-" return MINUS
+"*" return MULTIPLY
+"/" return DIVIDE
 
 {DIGIT}+ {
   yylval.ival = atoi(yytext);
@@ -31,13 +34,6 @@ ID    [a-zA-Z][a-zA-Z0-9]*
   return DOUBLENUMBER;
 }
 
-\(|\) { return yytext[0]; }
-\{|\} { return yytext[0]; }
-\[|\] { return yytext[0]; }
-\; { return yytext[0]; }
-
 [ \t\r\n]+ {  }
-
-. { return yytext[0]; }
 
 %%
