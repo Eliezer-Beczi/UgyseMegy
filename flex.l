@@ -8,21 +8,15 @@ using namespace std;
 
 %option noyywrap
 
-%union {
-  int ival;
-  float fval;
-  char* str;
-}
-
 DIGIT [0-9]
 ID    [a-zA-Z][a-zA-Z0-9]*
 
 %%
 
-"+" return PLUS
-"-" return MINUS
-"*" return MULTIPLY
-"/" return DIVIDE
+"+" { return PLUS; }  
+"-" { return MINUS; }
+"*" { return MULTIPLY; }
+"/" { return DIVIDE; }
 
 {DIGIT}+ {
   yylval.ival = atoi(yytext);

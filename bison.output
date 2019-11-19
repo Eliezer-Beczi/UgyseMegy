@@ -1,0 +1,226 @@
+Terminals unused in grammar
+
+   DOUBLENUMBER
+   INT
+   FLOAT
+   STR
+
+
+State 1 conflicts: 4 shift/reduce
+
+
+Grammar
+
+    0 $accept: s $end
+
+    1 s: KIF
+    2  | %empty
+
+    3 KIF: INTNUMBER
+    4    | INTNUMBER PLUS INTNUMBER
+    5    | INTNUMBER MINUS INTNUMBER
+    6    | INTNUMBER MULTIPLY INTNUMBER
+    7    | INTNUMBER DIVIDE INTNUMBER
+    8    | KIF PLUS INTNUMBER
+    9    | KIF MINUS INTNUMBER
+   10    | KIF MULTIPLY INTNUMBER
+   11    | KIF DIVIDE INTNUMBER
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+INTNUMBER (258) 3 4 5 6 7 8 9 10 11
+DOUBLENUMBER (259)
+PLUS (260) 4 8
+MINUS (261) 5 9
+MULTIPLY (262) 6 10
+DIVIDE (263) 7 11
+INT (264)
+FLOAT (265)
+STR (266)
+
+
+Nonterminals, with rules where they appear
+
+$accept (12)
+    on left: 0
+s (13)
+    on left: 1 2, on right: 0
+KIF (14)
+    on left: 3 4 5 6 7 8 9 10 11, on right: 1 8 9 10 11
+
+
+State 0
+
+    0 $accept: . s $end
+
+    INTNUMBER  shift, and go to state 1
+
+    $default  reduce using rule 2 (s)
+
+    s    go to state 2
+    KIF  go to state 3
+
+
+State 1
+
+    3 KIF: INTNUMBER .
+    4    | INTNUMBER . PLUS INTNUMBER
+    5    | INTNUMBER . MINUS INTNUMBER
+    6    | INTNUMBER . MULTIPLY INTNUMBER
+    7    | INTNUMBER . DIVIDE INTNUMBER
+
+    PLUS      shift, and go to state 4
+    MINUS     shift, and go to state 5
+    MULTIPLY  shift, and go to state 6
+    DIVIDE    shift, and go to state 7
+
+    PLUS      [reduce using rule 3 (KIF)]
+    MINUS     [reduce using rule 3 (KIF)]
+    MULTIPLY  [reduce using rule 3 (KIF)]
+    DIVIDE    [reduce using rule 3 (KIF)]
+    $default  reduce using rule 3 (KIF)
+
+
+State 2
+
+    0 $accept: s . $end
+
+    $end  shift, and go to state 8
+
+
+State 3
+
+    1 s: KIF .
+    8 KIF: KIF . PLUS INTNUMBER
+    9    | KIF . MINUS INTNUMBER
+   10    | KIF . MULTIPLY INTNUMBER
+   11    | KIF . DIVIDE INTNUMBER
+
+    PLUS      shift, and go to state 9
+    MINUS     shift, and go to state 10
+    MULTIPLY  shift, and go to state 11
+    DIVIDE    shift, and go to state 12
+
+    $default  reduce using rule 1 (s)
+
+
+State 4
+
+    4 KIF: INTNUMBER PLUS . INTNUMBER
+
+    INTNUMBER  shift, and go to state 13
+
+
+State 5
+
+    5 KIF: INTNUMBER MINUS . INTNUMBER
+
+    INTNUMBER  shift, and go to state 14
+
+
+State 6
+
+    6 KIF: INTNUMBER MULTIPLY . INTNUMBER
+
+    INTNUMBER  shift, and go to state 15
+
+
+State 7
+
+    7 KIF: INTNUMBER DIVIDE . INTNUMBER
+
+    INTNUMBER  shift, and go to state 16
+
+
+State 8
+
+    0 $accept: s $end .
+
+    $default  accept
+
+
+State 9
+
+    8 KIF: KIF PLUS . INTNUMBER
+
+    INTNUMBER  shift, and go to state 17
+
+
+State 10
+
+    9 KIF: KIF MINUS . INTNUMBER
+
+    INTNUMBER  shift, and go to state 18
+
+
+State 11
+
+   10 KIF: KIF MULTIPLY . INTNUMBER
+
+    INTNUMBER  shift, and go to state 19
+
+
+State 12
+
+   11 KIF: KIF DIVIDE . INTNUMBER
+
+    INTNUMBER  shift, and go to state 20
+
+
+State 13
+
+    4 KIF: INTNUMBER PLUS INTNUMBER .
+
+    $default  reduce using rule 4 (KIF)
+
+
+State 14
+
+    5 KIF: INTNUMBER MINUS INTNUMBER .
+
+    $default  reduce using rule 5 (KIF)
+
+
+State 15
+
+    6 KIF: INTNUMBER MULTIPLY INTNUMBER .
+
+    $default  reduce using rule 6 (KIF)
+
+
+State 16
+
+    7 KIF: INTNUMBER DIVIDE INTNUMBER .
+
+    $default  reduce using rule 7 (KIF)
+
+
+State 17
+
+    8 KIF: KIF PLUS INTNUMBER .
+
+    $default  reduce using rule 8 (KIF)
+
+
+State 18
+
+    9 KIF: KIF MINUS INTNUMBER .
+
+    $default  reduce using rule 9 (KIF)
+
+
+State 19
+
+   10 KIF: KIF MULTIPLY INTNUMBER .
+
+    $default  reduce using rule 10 (KIF)
+
+
+State 20
+
+   11 KIF: KIF DIVIDE INTNUMBER .
+
+    $default  reduce using rule 11 (KIF)
