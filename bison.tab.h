@@ -53,7 +53,10 @@ extern int yydebug;
     DIVIDE = 263,
     INT = 264,
     FLOAT = 265,
-    STR = 266
+    DOUBLE = 266,
+    STR = 267,
+    IF = 268,
+    BRACK = 269
   };
 #endif
 
@@ -66,9 +69,10 @@ union YYSTYPE
 
   int ival;
   float fval;
+  double dval;
   char* str;
 
-#line 72 "bison.tab.h" /* yacc.c:1909  */
+#line 76 "bison.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

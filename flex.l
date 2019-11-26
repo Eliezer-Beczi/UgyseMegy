@@ -17,6 +17,9 @@ ID    [a-zA-Z][a-zA-Z0-9]*
 "-" { return MINUS; }
 "*" { return MULTIPLY; }
 "/" { return DIVIDE; }
+"a" { return BRACK; }
+";" {return yytext[0];}
+"if" { return IF; }
 
 {DIGIT}+ {
   yylval.ival = atoi(yytext);

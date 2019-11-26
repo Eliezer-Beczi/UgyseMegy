@@ -9,12 +9,14 @@ extern int yylex();
 %union {
   int ival;
   float fval;
+  double dval;
   char* str;
 }
 
 %start s
 %token<ival> INTNUMBER
-%token DOUBLENUMBER
+%token<ival> DOUBLENUMBER
+
 %token PLUS
 %token MINUS
 %token MULTIPLY
@@ -23,29 +25,32 @@ extern int yylex();
 
 %token <ival> INT
 %token <fval> FLOAT
+%token <fval> DOUBLE
 %token <str> STR
 
 %left  PLUS MINUS 
 %left  MULTIPLY DIVIDE
 
 %type<ival> KIF
+%token IF
+%token BRACK
 
 %%
 
 s:  KIF { std::cout<<"Result:"<<$1<<endl;}
+	| IFBLOCK
+	| s ';' KIF 
+	| s ';' IFBLOCK
 	| // empty
 ;
 
-KIF: INTNUMBER {$$ = $1;}
-	| INTNUMBER PLUS INTNUMBER {$$ = $1 + $3;}
-	| INTNUMBER MINUS INTNUMBER {$$ = $1 - $3;}
-	| INTNUMBER MULTIPLY INTNUMBER {$$ = $1 * $3;}
-	| INTNUMBER DIVIDE INTNUMBER {$$ = $1 / $3;}
-
-	| KIF  PLUS INTNUMBER {$$ = $1 + $3;}
-	| KIF  MINUS INTNUMBER {$$ = $1 - $3;}
-	| KIF  MULTIPLY INTNUMBER {$$ = $1 * $3;}
-	| KIF  DIVIDE INTNUMBER {$$ = $1 / $3;}
+IFBLOCK: IF BRACK KIF BRACK
+;
+KIF: INTNUMBER {$$ = $1;}	
+	| KIF  PLUS KIF {$$ = $1 + $3;}
+	| KIF  MINUS KIF {$$ = $1 - $3;}
+	| KIF  MULTIPLY KIF {$$ = $1 * $3;}
+	| KIF  DIVIDE KIF {$$ = $1 / $3;}
 ;
 
 %%
