@@ -21,7 +21,35 @@ extern int yylex();
 %token MINUS
 %token MULTIPLY
 %token DIVIDE
+%token ASSIGNMENT
 
+%token L_BOX
+%token R_BOX
+%token L_ROUND
+%token R_ROUND
+%token L_CURLY
+%token R_CURLY
+%token L_ANGLE
+%token R_ANGLE
+
+%token EQUAL
+%token NOT_EQUAL
+%token AND
+%token OR
+%token NOT
+
+%token END
+
+%token READ
+%token PRINT
+
+%token IF
+%token ELSE
+%token WHILE
+
+%token INTEGER_TYPE
+%token DOUBLE_TYPE
+%token VARIABLE_ID
 
 %token <ival> INT
 %token <fval> FLOAT
@@ -32,8 +60,6 @@ extern int yylex();
 %left  MULTIPLY DIVIDE
 
 %type<ival> KIF
-%token IF
-%token BRACK
 
 %%
 
