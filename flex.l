@@ -5,7 +5,7 @@
 
 using namespace std;
 
-int poz[] = {1, 1, 0}
+int poz[] = {1, 0, 0};
 
 %}
 
@@ -142,7 +142,7 @@ ID    [a-zA-Z][a-zA-Z0-9]*
   return NOT;
 }
 
-"." {
+";" {
   poz[1] += 1;
   poz[2] = 1;
 

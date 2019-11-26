@@ -4,6 +4,7 @@ using namespace std;
 
 int yyerror(const char*);
 extern int yylex();
+extern int poz[];
 %}
 
 %union {
@@ -13,7 +14,7 @@ extern int yylex();
   char* str;
 }
 
-%start s
+%start START
 %token<ival> INTNUMBER
 %token<ival> DOUBLENUMBER
 
@@ -59,24 +60,54 @@ extern int yylex();
 %left  PLUS MINUS 
 %left  MULTIPLY DIVIDE
 
+%left  OR AND
+
+
 %type<ival> KIF
 
 %%
 
-s:  KIF { std::cout<<"Result:"<<$1<<endl;}
-	| IFBLOCK
-	| s ';' KIF 
-	| s ';' IFBLOCK
+START: 
+	PROG 
 	| // empty
 ;
 
-IFBLOCK: IF BRACK KIF BRACK
+PROG:
+	UTASITAS END
+	| PROG  UTASITAS END
+	| IFBLOCK
+	| WHILEBLOCK	
 ;
+
+UTASITAS: KIF { cout<<$1;}
+;
+
+IFBLOCK: IF L_BOX BOOLKIF R_BOX L_ANGLE PROG R_ANGLE
+		|IF L_BOX BOOLKIF R_BOX L_ANGLE PROG R_ANGLE ELSE L_ANGLE PROG R_ANGLE
+;
+
+WHILEBLOCK: WHILE L_BOX BOOLKIF R_BOX L_ANGLE PROG R_ANGLE
+;
+
+EQUALITY: KIF EQUAL KIF
+;
+
+NOTEQUALITY: KIF NOT_EQUAL KIF
+;
+
+BOOLKIF: EQUALITY 
+		| NOTEQUALITY 
+		| BOOLKIF OR BOOLKIF
+		| BOOLKIF AND BOOLKIF
+		| L_ROUND BOOLKIF R_ROUND
+;
+
 KIF: INTNUMBER {$$ = $1;}	
 	| KIF  PLUS KIF {$$ = $1 + $3;}
 	| KIF  MINUS KIF {$$ = $1 - $3;}
 	| KIF  MULTIPLY KIF {$$ = $1 * $3;}
 	| KIF  DIVIDE KIF {$$ = $1 / $3;}
+	| L_ROUND KIF R_ROUND { $$ = $2;}
 ;
 
 %%
@@ -86,5 +117,6 @@ int main() {
 }
 
 int yyerror(const char* s) {
-	cout << s << endl;
+	cout << "Line: " <<poz[0]<<" Col: "<<poz[1]<<" Len: "<<poz[2] << endl;
+	cout<< s<<endl;
 }

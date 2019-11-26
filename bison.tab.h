@@ -51,12 +51,33 @@ extern int yydebug;
     MINUS = 261,
     MULTIPLY = 262,
     DIVIDE = 263,
-    INT = 264,
-    FLOAT = 265,
-    DOUBLE = 266,
-    STR = 267,
-    IF = 268,
-    BRACK = 269
+    ASSIGNMENT = 264,
+    L_BOX = 265,
+    R_BOX = 266,
+    L_ROUND = 267,
+    R_ROUND = 268,
+    L_CURLY = 269,
+    R_CURLY = 270,
+    L_ANGLE = 271,
+    R_ANGLE = 272,
+    EQUAL = 273,
+    NOT_EQUAL = 274,
+    AND = 275,
+    OR = 276,
+    NOT = 277,
+    END = 278,
+    READ = 279,
+    PRINT = 280,
+    IF = 281,
+    ELSE = 282,
+    WHILE = 283,
+    INTEGER_TYPE = 284,
+    DOUBLE_TYPE = 285,
+    VARIABLE_ID = 286,
+    INT = 287,
+    FLOAT = 288,
+    DOUBLE = 289,
+    STR = 290
   };
 #endif
 
@@ -65,14 +86,14 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 9 "bison.y" /* yacc.c:1909  */
+#line 10 "bison.y" /* yacc.c:1909  */
 
   int ival;
   float fval;
   double dval;
   char* str;
 
-#line 76 "bison.tab.h" /* yacc.c:1909  */
+#line 97 "bison.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
