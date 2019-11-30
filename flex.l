@@ -1,6 +1,6 @@
 %{
 #include <iostream>
-
+#include <stdlib.h>
 #include "bison.tab.h"
 
 using namespace std;
@@ -15,6 +15,27 @@ DIGIT [0-9]
 ID    [a-zA-Z][a-zA-Z0-9]*
 
 %%
+
+"~" {
+  poz[1] += 1;
+  poz[2] = 1;
+
+  return TILDA;
+}
+
+"|" {
+  poz[1] += 1;
+  poz[2] = 1;
+
+  return PIPE;
+}
+
+":" {
+  poz[1] += 1;
+  poz[2] = 1;
+
+  return DOUBLECOMMA;
+}
 
 "=" {
   poz[1] += 1;
@@ -142,6 +163,13 @@ ID    [a-zA-Z][a-zA-Z0-9]*
   return NOT;
 }
 
+"nemzetkozi" {
+  poz[1] += 10;
+  poz[2] = 10;
+
+  return GLOBAL_MODIFIER;
+}
+
 ";" {
   poz[1] += 1;
   poz[2] = 1;
@@ -217,7 +245,8 @@ ID    [a-zA-Z][a-zA-Z0-9]*
   poz[1] += yyleng;
   poz[2] = yyleng;
 
-  yylval.fval = atof(yytext);
+  // yylval.fval = atof(yytext);  
+  yylval.dval = strtod(yytext,NULL);
   return DOUBLENUMBER;
 }
 

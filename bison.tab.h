@@ -74,10 +74,14 @@ extern int yydebug;
     INTEGER_TYPE = 284,
     DOUBLE_TYPE = 285,
     VARIABLE_ID = 286,
-    INT = 287,
-    FLOAT = 288,
-    DOUBLE = 289,
-    STR = 290
+    GLOBAL_MODIFIER = 287,
+    PIPE = 288,
+    DOUBLECOMMA = 289,
+    TILDA = 290,
+    INT = 291,
+    FLOAT = 292,
+    DOUBLE = 293,
+    STR = 294
   };
 #endif
 
@@ -93,7 +97,7 @@ union YYSTYPE
   double dval;
   char* str;
 
-#line 97 "bison.tab.h" /* yacc.c:1909  */
+#line 101 "bison.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

@@ -1,15 +1,9 @@
 Terminals unused in grammar
 
-   DOUBLENUMBER
-   ASSIGNMENT
    L_CURLY
    R_CURLY
    NOT
-   READ
-   PRINT
-   INTEGER_TYPE
-   DOUBLE_TYPE
-   VARIABLE_ID
+   ELSE
    INT
    FLOAT
    DOUBLE
@@ -23,706 +17,1268 @@ Grammar
     1 START: PROG
     2      | %empty
 
-    3 PROG: UTASITAS END
-    4     | PROG UTASITAS END
+    3 PROG: COMMAND END
+    4     | PROG COMMAND END
     5     | IFBLOCK
     6     | WHILEBLOCK
+    7     | PROG IFBLOCK
+    8     | PROG WHILEBLOCK
+    9     | error
 
-    7 UTASITAS: KIF
+   10 COMMAND: EXPRESSION
+   11        | DECLARATION
+   12        | VARIABLE_ASSIGNMENT
+   13        | READ_VARIABLE
+   14        | PRINT_VARIABLE
 
-    8 IFBLOCK: IF L_BOX BOOLKIF R_BOX L_ANGLE PROG R_ANGLE
-    9        | IF L_BOX BOOLKIF R_BOX L_ANGLE PROG R_ANGLE ELSE L_ANGLE PROG R_ANGLE
+   15 IFBLOCK: IF L_BOX BOOLEXPRESSION R_BOX L_ANGLE PROG R_ANGLE
+   16        | IF L_BOX BOOLEXPRESSION R_BOX L_ANGLE PROG L_ANGLE R_ANGLE PROG R_ANGLE
 
-   10 WHILEBLOCK: WHILE L_BOX BOOLKIF R_BOX L_ANGLE PROG R_ANGLE
+   17 WHILEBLOCK: WHILE L_BOX BOOLEXPRESSION R_BOX L_ANGLE PROG R_ANGLE
 
-   11 EQUALITY: KIF EQUAL KIF
+   18 EQUALITY: EXPRESSION EQUAL EXPRESSION
 
-   12 NOTEQUALITY: KIF NOT_EQUAL KIF
+   19 NOTEQUALITY: EXPRESSION NOT_EQUAL EXPRESSION
 
-   13 BOOLKIF: EQUALITY
-   14        | NOTEQUALITY
-   15        | BOOLKIF OR BOOLKIF
-   16        | BOOLKIF AND BOOLKIF
-   17        | L_ROUND BOOLKIF R_ROUND
+   20 SMALLER: EXPRESSION L_ANGLE EXPRESSION
 
-   18 KIF: INTNUMBER
-   19    | KIF PLUS KIF
-   20    | KIF MINUS KIF
-   21    | KIF MULTIPLY KIF
-   22    | KIF DIVIDE KIF
-   23    | L_ROUND KIF R_ROUND
+   21 BIGGER: EXPRESSION R_ANGLE EXPRESSION
+
+   22 BOOLEXPRESSION: EQUALITY
+   23               | NOTEQUALITY
+   24               | SMALLER
+   25               | BIGGER
+   26               | BOOLEXPRESSION OR BOOLEXPRESSION
+   27               | BOOLEXPRESSION AND BOOLEXPRESSION
+   28               | L_ROUND BOOLEXPRESSION R_ROUND
+   29               | error
+
+   30 EXPRESSION: VARIABLE_EVAL
+   31           | INTNUMBER
+   32           | DOUBLENUMBER
+   33           | EXPRESSION PLUS EXPRESSION
+   34           | EXPRESSION MINUS EXPRESSION
+   35           | EXPRESSION MULTIPLY EXPRESSION
+   36           | EXPRESSION DIVIDE EXPRESSION
+   37           | L_ROUND EXPRESSION R_ROUND
+
+   38 VARIABLE_TYPE: INTEGER_TYPE
+   39              | DOUBLE_TYPE
+
+   40 VARIABLE_EVAL: VARIABLE_ID
+   41              | VARIABLE_ID TILDA VARIABLE_TYPE
+
+   42 ACCESS_MODIFIER: GLOBAL_MODIFIER
+   43                | %empty
+
+   44 DECLARATION: ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID L_ANGLE VARIABLE_TYPE
+   45            | ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID PIPE VARIABLE_TYPE
+
+   46 VARIABLE_ASSIGNMENT: VARIABLE_ID ASSIGNMENT EXPRESSION
+
+   47 READ_VARIABLE: READ VARIABLE_ID
+
+   48 PRINT_VARIABLE: PRINT VARIABLE_ID
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
-error (256)
-INTNUMBER (258) 18
-DOUBLENUMBER (259)
-PLUS (260) 19
-MINUS (261) 20
-MULTIPLY (262) 21
-DIVIDE (263) 22
-ASSIGNMENT (264)
-L_BOX (265) 8 9 10
-R_BOX (266) 8 9 10
-L_ROUND (267) 17 23
-R_ROUND (268) 17 23
+error (256) 9 29
+INTNUMBER (258) 31
+DOUBLENUMBER (259) 32
+PLUS (260) 33
+MINUS (261) 34
+MULTIPLY (262) 35
+DIVIDE (263) 36
+ASSIGNMENT (264) 46
+L_BOX (265) 15 16 17
+R_BOX (266) 15 16 17
+L_ROUND (267) 28 37
+R_ROUND (268) 28 37
 L_CURLY (269)
 R_CURLY (270)
-L_ANGLE (271) 8 9 10
-R_ANGLE (272) 8 9 10
-EQUAL (273) 11
-NOT_EQUAL (274) 12
-AND (275) 16
-OR (276) 15
+L_ANGLE (271) 15 16 17 20 44
+R_ANGLE (272) 15 16 17 21
+EQUAL (273) 18
+NOT_EQUAL (274) 19
+AND (275) 27
+OR (276) 26
 NOT (277)
 END (278) 3 4
-READ (279)
-PRINT (280)
-IF (281) 8 9
-ELSE (282) 9
-WHILE (283) 10
-INTEGER_TYPE (284)
-DOUBLE_TYPE (285)
-VARIABLE_ID (286)
-INT (287)
-FLOAT (288)
-DOUBLE (289)
-STR (290)
+READ (279) 47
+PRINT (280) 48
+IF (281) 15 16
+ELSE (282)
+WHILE (283) 17
+INTEGER_TYPE (284) 38
+DOUBLE_TYPE (285) 39
+VARIABLE_ID (286) 40 41 44 45 46 47 48
+GLOBAL_MODIFIER (287) 42
+PIPE (288) 45
+DOUBLECOMMA (289) 44 45
+TILDA (290) 41
+INT (291)
+FLOAT (292)
+DOUBLE (293)
+STR (294)
 
 
 Nonterminals, with rules where they appear
 
-$accept (36)
+$accept (40)
     on left: 0
-START (37)
+START (41)
     on left: 1 2, on right: 0
-PROG (38)
-    on left: 3 4 5 6, on right: 1 4 8 9 10
-UTASITAS (39)
-    on left: 7, on right: 3 4
-IFBLOCK (40)
-    on left: 8 9, on right: 5
-WHILEBLOCK (41)
-    on left: 10, on right: 6
-EQUALITY (42)
-    on left: 11, on right: 13
-NOTEQUALITY (43)
-    on left: 12, on right: 14
-BOOLKIF (44)
-    on left: 13 14 15 16 17, on right: 8 9 10 15 16 17
-KIF (45)
-    on left: 18 19 20 21 22 23, on right: 7 11 12 19 20 21 22 23
+PROG (42)
+    on left: 3 4 5 6 7 8 9, on right: 1 4 7 8 15 16 17
+COMMAND (43)
+    on left: 10 11 12 13 14, on right: 3 4
+IFBLOCK (44)
+    on left: 15 16, on right: 5 7
+WHILEBLOCK (45)
+    on left: 17, on right: 6 8
+EQUALITY (46)
+    on left: 18, on right: 22
+NOTEQUALITY (47)
+    on left: 19, on right: 23
+SMALLER (48)
+    on left: 20, on right: 24
+BIGGER (49)
+    on left: 21, on right: 25
+BOOLEXPRESSION (50)
+    on left: 22 23 24 25 26 27 28 29, on right: 15 16 17 26 27 28
+EXPRESSION (51)
+    on left: 30 31 32 33 34 35 36 37, on right: 10 18 19 20 21 33 34
+    35 36 37 46
+VARIABLE_TYPE (52)
+    on left: 38 39, on right: 41 44 45
+VARIABLE_EVAL (53)
+    on left: 40 41, on right: 30
+ACCESS_MODIFIER (54)
+    on left: 42 43, on right: 44 45
+DECLARATION (55)
+    on left: 44 45, on right: 11
+VARIABLE_ASSIGNMENT (56)
+    on left: 46, on right: 12
+READ_VARIABLE (57)
+    on left: 47, on right: 13
+PRINT_VARIABLE (58)
+    on left: 48, on right: 14
 
 
 State 0
 
     0 $accept: . START $end
 
-    INTNUMBER  shift, and go to state 1
-    L_ROUND    shift, and go to state 2
-    IF         shift, and go to state 3
-    WHILE      shift, and go to state 4
+    error            shift, and go to state 1
+    INTNUMBER        shift, and go to state 2
+    DOUBLENUMBER     shift, and go to state 3
+    L_ROUND          shift, and go to state 4
+    READ             shift, and go to state 5
+    PRINT            shift, and go to state 6
+    IF               shift, and go to state 7
+    WHILE            shift, and go to state 8
+    VARIABLE_ID      shift, and go to state 9
+    GLOBAL_MODIFIER  shift, and go to state 10
 
-    $default  reduce using rule 2 (START)
+    $end         reduce using rule 2 (START)
+    DOUBLECOMMA  reduce using rule 43 (ACCESS_MODIFIER)
 
-    START       go to state 5
-    PROG        go to state 6
-    UTASITAS    go to state 7
-    IFBLOCK     go to state 8
-    WHILEBLOCK  go to state 9
-    KIF         go to state 10
+    START                go to state 11
+    PROG                 go to state 12
+    COMMAND              go to state 13
+    IFBLOCK              go to state 14
+    WHILEBLOCK           go to state 15
+    EXPRESSION           go to state 16
+    VARIABLE_EVAL        go to state 17
+    ACCESS_MODIFIER      go to state 18
+    DECLARATION          go to state 19
+    VARIABLE_ASSIGNMENT  go to state 20
+    READ_VARIABLE        go to state 21
+    PRINT_VARIABLE       go to state 22
 
 
 State 1
 
-   18 KIF: INTNUMBER .
+    9 PROG: error .
 
-    $default  reduce using rule 18 (KIF)
+    $default  reduce using rule 9 (PROG)
 
 
 State 2
 
-   23 KIF: L_ROUND . KIF R_ROUND
+   31 EXPRESSION: INTNUMBER .
 
-    INTNUMBER  shift, and go to state 1
-    L_ROUND    shift, and go to state 2
-
-    KIF  go to state 11
+    $default  reduce using rule 31 (EXPRESSION)
 
 
 State 3
 
-    8 IFBLOCK: IF . L_BOX BOOLKIF R_BOX L_ANGLE PROG R_ANGLE
-    9        | IF . L_BOX BOOLKIF R_BOX L_ANGLE PROG R_ANGLE ELSE L_ANGLE PROG R_ANGLE
+   32 EXPRESSION: DOUBLENUMBER .
 
-    L_BOX  shift, and go to state 12
+    $default  reduce using rule 32 (EXPRESSION)
 
 
 State 4
 
-   10 WHILEBLOCK: WHILE . L_BOX BOOLKIF R_BOX L_ANGLE PROG R_ANGLE
+   37 EXPRESSION: L_ROUND . EXPRESSION R_ROUND
 
-    L_BOX  shift, and go to state 13
+    INTNUMBER     shift, and go to state 2
+    DOUBLENUMBER  shift, and go to state 3
+    L_ROUND       shift, and go to state 4
+    VARIABLE_ID   shift, and go to state 23
+
+    EXPRESSION     go to state 24
+    VARIABLE_EVAL  go to state 17
 
 
 State 5
 
-    0 $accept: START . $end
+   47 READ_VARIABLE: READ . VARIABLE_ID
 
-    $end  shift, and go to state 14
+    VARIABLE_ID  shift, and go to state 25
 
 
 State 6
 
-    1 START: PROG .
-    4 PROG: PROG . UTASITAS END
+   48 PRINT_VARIABLE: PRINT . VARIABLE_ID
 
-    INTNUMBER  shift, and go to state 1
-    L_ROUND    shift, and go to state 2
-
-    $default  reduce using rule 1 (START)
-
-    UTASITAS  go to state 15
-    KIF       go to state 10
+    VARIABLE_ID  shift, and go to state 26
 
 
 State 7
 
-    3 PROG: UTASITAS . END
+   15 IFBLOCK: IF . L_BOX BOOLEXPRESSION R_BOX L_ANGLE PROG R_ANGLE
+   16        | IF . L_BOX BOOLEXPRESSION R_BOX L_ANGLE PROG L_ANGLE R_ANGLE PROG R_ANGLE
 
-    END  shift, and go to state 16
+    L_BOX  shift, and go to state 27
 
 
 State 8
+
+   17 WHILEBLOCK: WHILE . L_BOX BOOLEXPRESSION R_BOX L_ANGLE PROG R_ANGLE
+
+    L_BOX  shift, and go to state 28
+
+
+State 9
+
+   40 VARIABLE_EVAL: VARIABLE_ID .
+   41              | VARIABLE_ID . TILDA VARIABLE_TYPE
+   46 VARIABLE_ASSIGNMENT: VARIABLE_ID . ASSIGNMENT EXPRESSION
+
+    ASSIGNMENT  shift, and go to state 29
+    TILDA       shift, and go to state 30
+
+    $default  reduce using rule 40 (VARIABLE_EVAL)
+
+
+State 10
+
+   42 ACCESS_MODIFIER: GLOBAL_MODIFIER .
+
+    $default  reduce using rule 42 (ACCESS_MODIFIER)
+
+
+State 11
+
+    0 $accept: START . $end
+
+    $end  shift, and go to state 31
+
+
+State 12
+
+    1 START: PROG .
+    4 PROG: PROG . COMMAND END
+    7     | PROG . IFBLOCK
+    8     | PROG . WHILEBLOCK
+
+    INTNUMBER        shift, and go to state 2
+    DOUBLENUMBER     shift, and go to state 3
+    L_ROUND          shift, and go to state 4
+    READ             shift, and go to state 5
+    PRINT            shift, and go to state 6
+    IF               shift, and go to state 7
+    WHILE            shift, and go to state 8
+    VARIABLE_ID      shift, and go to state 9
+    GLOBAL_MODIFIER  shift, and go to state 10
+
+    DOUBLECOMMA  reduce using rule 43 (ACCESS_MODIFIER)
+    $default     reduce using rule 1 (START)
+
+    COMMAND              go to state 32
+    IFBLOCK              go to state 33
+    WHILEBLOCK           go to state 34
+    EXPRESSION           go to state 16
+    VARIABLE_EVAL        go to state 17
+    ACCESS_MODIFIER      go to state 18
+    DECLARATION          go to state 19
+    VARIABLE_ASSIGNMENT  go to state 20
+    READ_VARIABLE        go to state 21
+    PRINT_VARIABLE       go to state 22
+
+
+State 13
+
+    3 PROG: COMMAND . END
+
+    END  shift, and go to state 35
+
+
+State 14
 
     5 PROG: IFBLOCK .
 
     $default  reduce using rule 5 (PROG)
 
 
-State 9
+State 15
 
     6 PROG: WHILEBLOCK .
 
     $default  reduce using rule 6 (PROG)
 
 
-State 10
+State 16
 
-    7 UTASITAS: KIF .
-   19 KIF: KIF . PLUS KIF
-   20    | KIF . MINUS KIF
-   21    | KIF . MULTIPLY KIF
-   22    | KIF . DIVIDE KIF
+   10 COMMAND: EXPRESSION .
+   33 EXPRESSION: EXPRESSION . PLUS EXPRESSION
+   34           | EXPRESSION . MINUS EXPRESSION
+   35           | EXPRESSION . MULTIPLY EXPRESSION
+   36           | EXPRESSION . DIVIDE EXPRESSION
 
-    PLUS      shift, and go to state 17
-    MINUS     shift, and go to state 18
-    MULTIPLY  shift, and go to state 19
-    DIVIDE    shift, and go to state 20
+    PLUS      shift, and go to state 36
+    MINUS     shift, and go to state 37
+    MULTIPLY  shift, and go to state 38
+    DIVIDE    shift, and go to state 39
 
-    $default  reduce using rule 7 (UTASITAS)
-
-
-State 11
-
-   19 KIF: KIF . PLUS KIF
-   20    | KIF . MINUS KIF
-   21    | KIF . MULTIPLY KIF
-   22    | KIF . DIVIDE KIF
-   23    | L_ROUND KIF . R_ROUND
-
-    PLUS      shift, and go to state 17
-    MINUS     shift, and go to state 18
-    MULTIPLY  shift, and go to state 19
-    DIVIDE    shift, and go to state 20
-    R_ROUND   shift, and go to state 21
+    $default  reduce using rule 10 (COMMAND)
 
 
-State 12
+State 17
 
-    8 IFBLOCK: IF L_BOX . BOOLKIF R_BOX L_ANGLE PROG R_ANGLE
-    9        | IF L_BOX . BOOLKIF R_BOX L_ANGLE PROG R_ANGLE ELSE L_ANGLE PROG R_ANGLE
+   30 EXPRESSION: VARIABLE_EVAL .
 
-    INTNUMBER  shift, and go to state 1
-    L_ROUND    shift, and go to state 22
-
-    EQUALITY     go to state 23
-    NOTEQUALITY  go to state 24
-    BOOLKIF      go to state 25
-    KIF          go to state 26
+    $default  reduce using rule 30 (EXPRESSION)
 
 
-State 13
+State 18
 
-   10 WHILEBLOCK: WHILE L_BOX . BOOLKIF R_BOX L_ANGLE PROG R_ANGLE
+   44 DECLARATION: ACCESS_MODIFIER . DOUBLECOMMA VARIABLE_ID L_ANGLE VARIABLE_TYPE
+   45            | ACCESS_MODIFIER . DOUBLECOMMA VARIABLE_ID PIPE VARIABLE_TYPE
 
-    INTNUMBER  shift, and go to state 1
-    L_ROUND    shift, and go to state 22
-
-    EQUALITY     go to state 23
-    NOTEQUALITY  go to state 24
-    BOOLKIF      go to state 27
-    KIF          go to state 26
+    DOUBLECOMMA  shift, and go to state 40
 
 
-State 14
+State 19
+
+   11 COMMAND: DECLARATION .
+
+    $default  reduce using rule 11 (COMMAND)
+
+
+State 20
+
+   12 COMMAND: VARIABLE_ASSIGNMENT .
+
+    $default  reduce using rule 12 (COMMAND)
+
+
+State 21
+
+   13 COMMAND: READ_VARIABLE .
+
+    $default  reduce using rule 13 (COMMAND)
+
+
+State 22
+
+   14 COMMAND: PRINT_VARIABLE .
+
+    $default  reduce using rule 14 (COMMAND)
+
+
+State 23
+
+   40 VARIABLE_EVAL: VARIABLE_ID .
+   41              | VARIABLE_ID . TILDA VARIABLE_TYPE
+
+    TILDA  shift, and go to state 30
+
+    $default  reduce using rule 40 (VARIABLE_EVAL)
+
+
+State 24
+
+   33 EXPRESSION: EXPRESSION . PLUS EXPRESSION
+   34           | EXPRESSION . MINUS EXPRESSION
+   35           | EXPRESSION . MULTIPLY EXPRESSION
+   36           | EXPRESSION . DIVIDE EXPRESSION
+   37           | L_ROUND EXPRESSION . R_ROUND
+
+    PLUS      shift, and go to state 36
+    MINUS     shift, and go to state 37
+    MULTIPLY  shift, and go to state 38
+    DIVIDE    shift, and go to state 39
+    R_ROUND   shift, and go to state 41
+
+
+State 25
+
+   47 READ_VARIABLE: READ VARIABLE_ID .
+
+    $default  reduce using rule 47 (READ_VARIABLE)
+
+
+State 26
+
+   48 PRINT_VARIABLE: PRINT VARIABLE_ID .
+
+    $default  reduce using rule 48 (PRINT_VARIABLE)
+
+
+State 27
+
+   15 IFBLOCK: IF L_BOX . BOOLEXPRESSION R_BOX L_ANGLE PROG R_ANGLE
+   16        | IF L_BOX . BOOLEXPRESSION R_BOX L_ANGLE PROG L_ANGLE R_ANGLE PROG R_ANGLE
+
+    error         shift, and go to state 42
+    INTNUMBER     shift, and go to state 2
+    DOUBLENUMBER  shift, and go to state 3
+    L_ROUND       shift, and go to state 43
+    VARIABLE_ID   shift, and go to state 23
+
+    EQUALITY        go to state 44
+    NOTEQUALITY     go to state 45
+    SMALLER         go to state 46
+    BIGGER          go to state 47
+    BOOLEXPRESSION  go to state 48
+    EXPRESSION      go to state 49
+    VARIABLE_EVAL   go to state 17
+
+
+State 28
+
+   17 WHILEBLOCK: WHILE L_BOX . BOOLEXPRESSION R_BOX L_ANGLE PROG R_ANGLE
+
+    error         shift, and go to state 42
+    INTNUMBER     shift, and go to state 2
+    DOUBLENUMBER  shift, and go to state 3
+    L_ROUND       shift, and go to state 43
+    VARIABLE_ID   shift, and go to state 23
+
+    EQUALITY        go to state 44
+    NOTEQUALITY     go to state 45
+    SMALLER         go to state 46
+    BIGGER          go to state 47
+    BOOLEXPRESSION  go to state 50
+    EXPRESSION      go to state 49
+    VARIABLE_EVAL   go to state 17
+
+
+State 29
+
+   46 VARIABLE_ASSIGNMENT: VARIABLE_ID ASSIGNMENT . EXPRESSION
+
+    INTNUMBER     shift, and go to state 2
+    DOUBLENUMBER  shift, and go to state 3
+    L_ROUND       shift, and go to state 4
+    VARIABLE_ID   shift, and go to state 23
+
+    EXPRESSION     go to state 51
+    VARIABLE_EVAL  go to state 17
+
+
+State 30
+
+   41 VARIABLE_EVAL: VARIABLE_ID TILDA . VARIABLE_TYPE
+
+    INTEGER_TYPE  shift, and go to state 52
+    DOUBLE_TYPE   shift, and go to state 53
+
+    VARIABLE_TYPE  go to state 54
+
+
+State 31
 
     0 $accept: START $end .
 
     $default  accept
 
 
-State 15
-
-    4 PROG: PROG UTASITAS . END
-
-    END  shift, and go to state 28
-
-
-State 16
-
-    3 PROG: UTASITAS END .
-
-    $default  reduce using rule 3 (PROG)
-
-
-State 17
-
-   19 KIF: KIF PLUS . KIF
-
-    INTNUMBER  shift, and go to state 1
-    L_ROUND    shift, and go to state 2
-
-    KIF  go to state 29
-
-
-State 18
-
-   20 KIF: KIF MINUS . KIF
-
-    INTNUMBER  shift, and go to state 1
-    L_ROUND    shift, and go to state 2
-
-    KIF  go to state 30
-
-
-State 19
-
-   21 KIF: KIF MULTIPLY . KIF
-
-    INTNUMBER  shift, and go to state 1
-    L_ROUND    shift, and go to state 2
-
-    KIF  go to state 31
-
-
-State 20
-
-   22 KIF: KIF DIVIDE . KIF
-
-    INTNUMBER  shift, and go to state 1
-    L_ROUND    shift, and go to state 2
-
-    KIF  go to state 32
-
-
-State 21
-
-   23 KIF: L_ROUND KIF R_ROUND .
-
-    $default  reduce using rule 23 (KIF)
-
-
-State 22
-
-   17 BOOLKIF: L_ROUND . BOOLKIF R_ROUND
-   23 KIF: L_ROUND . KIF R_ROUND
-
-    INTNUMBER  shift, and go to state 1
-    L_ROUND    shift, and go to state 22
-
-    EQUALITY     go to state 23
-    NOTEQUALITY  go to state 24
-    BOOLKIF      go to state 33
-    KIF          go to state 34
-
-
-State 23
-
-   13 BOOLKIF: EQUALITY .
-
-    $default  reduce using rule 13 (BOOLKIF)
-
-
-State 24
-
-   14 BOOLKIF: NOTEQUALITY .
-
-    $default  reduce using rule 14 (BOOLKIF)
-
-
-State 25
-
-    8 IFBLOCK: IF L_BOX BOOLKIF . R_BOX L_ANGLE PROG R_ANGLE
-    9        | IF L_BOX BOOLKIF . R_BOX L_ANGLE PROG R_ANGLE ELSE L_ANGLE PROG R_ANGLE
-   15 BOOLKIF: BOOLKIF . OR BOOLKIF
-   16        | BOOLKIF . AND BOOLKIF
-
-    R_BOX  shift, and go to state 35
-    AND    shift, and go to state 36
-    OR     shift, and go to state 37
-
-
-State 26
-
-   11 EQUALITY: KIF . EQUAL KIF
-   12 NOTEQUALITY: KIF . NOT_EQUAL KIF
-   19 KIF: KIF . PLUS KIF
-   20    | KIF . MINUS KIF
-   21    | KIF . MULTIPLY KIF
-   22    | KIF . DIVIDE KIF
-
-    PLUS       shift, and go to state 17
-    MINUS      shift, and go to state 18
-    MULTIPLY   shift, and go to state 19
-    DIVIDE     shift, and go to state 20
-    EQUAL      shift, and go to state 38
-    NOT_EQUAL  shift, and go to state 39
-
-
-State 27
-
-   10 WHILEBLOCK: WHILE L_BOX BOOLKIF . R_BOX L_ANGLE PROG R_ANGLE
-   15 BOOLKIF: BOOLKIF . OR BOOLKIF
-   16        | BOOLKIF . AND BOOLKIF
-
-    R_BOX  shift, and go to state 40
-    AND    shift, and go to state 36
-    OR     shift, and go to state 37
-
-
-State 28
-
-    4 PROG: PROG UTASITAS END .
-
-    $default  reduce using rule 4 (PROG)
-
-
-State 29
-
-   19 KIF: KIF . PLUS KIF
-   19    | KIF PLUS KIF .
-   20    | KIF . MINUS KIF
-   21    | KIF . MULTIPLY KIF
-   22    | KIF . DIVIDE KIF
-
-    MULTIPLY  shift, and go to state 19
-    DIVIDE    shift, and go to state 20
-
-    $default  reduce using rule 19 (KIF)
-
-
-State 30
-
-   19 KIF: KIF . PLUS KIF
-   20    | KIF . MINUS KIF
-   20    | KIF MINUS KIF .
-   21    | KIF . MULTIPLY KIF
-   22    | KIF . DIVIDE KIF
-
-    MULTIPLY  shift, and go to state 19
-    DIVIDE    shift, and go to state 20
-
-    $default  reduce using rule 20 (KIF)
-
-
-State 31
-
-   19 KIF: KIF . PLUS KIF
-   20    | KIF . MINUS KIF
-   21    | KIF . MULTIPLY KIF
-   21    | KIF MULTIPLY KIF .
-   22    | KIF . DIVIDE KIF
-
-    $default  reduce using rule 21 (KIF)
-
-
 State 32
 
-   19 KIF: KIF . PLUS KIF
-   20    | KIF . MINUS KIF
-   21    | KIF . MULTIPLY KIF
-   22    | KIF . DIVIDE KIF
-   22    | KIF DIVIDE KIF .
+    4 PROG: PROG COMMAND . END
 
-    $default  reduce using rule 22 (KIF)
+    END  shift, and go to state 55
 
 
 State 33
 
-   15 BOOLKIF: BOOLKIF . OR BOOLKIF
-   16        | BOOLKIF . AND BOOLKIF
-   17        | L_ROUND BOOLKIF . R_ROUND
+    7 PROG: PROG IFBLOCK .
 
-    R_ROUND  shift, and go to state 41
-    AND      shift, and go to state 36
-    OR       shift, and go to state 37
+    $default  reduce using rule 7 (PROG)
 
 
 State 34
 
-   11 EQUALITY: KIF . EQUAL KIF
-   12 NOTEQUALITY: KIF . NOT_EQUAL KIF
-   19 KIF: KIF . PLUS KIF
-   20    | KIF . MINUS KIF
-   21    | KIF . MULTIPLY KIF
-   22    | KIF . DIVIDE KIF
-   23    | L_ROUND KIF . R_ROUND
+    8 PROG: PROG WHILEBLOCK .
 
-    PLUS       shift, and go to state 17
-    MINUS      shift, and go to state 18
-    MULTIPLY   shift, and go to state 19
-    DIVIDE     shift, and go to state 20
-    R_ROUND    shift, and go to state 21
-    EQUAL      shift, and go to state 38
-    NOT_EQUAL  shift, and go to state 39
+    $default  reduce using rule 8 (PROG)
 
 
 State 35
 
-    8 IFBLOCK: IF L_BOX BOOLKIF R_BOX . L_ANGLE PROG R_ANGLE
-    9        | IF L_BOX BOOLKIF R_BOX . L_ANGLE PROG R_ANGLE ELSE L_ANGLE PROG R_ANGLE
+    3 PROG: COMMAND END .
 
-    L_ANGLE  shift, and go to state 42
+    $default  reduce using rule 3 (PROG)
 
 
 State 36
 
-   16 BOOLKIF: BOOLKIF AND . BOOLKIF
+   33 EXPRESSION: EXPRESSION PLUS . EXPRESSION
 
-    INTNUMBER  shift, and go to state 1
-    L_ROUND    shift, and go to state 22
+    INTNUMBER     shift, and go to state 2
+    DOUBLENUMBER  shift, and go to state 3
+    L_ROUND       shift, and go to state 4
+    VARIABLE_ID   shift, and go to state 23
 
-    EQUALITY     go to state 23
-    NOTEQUALITY  go to state 24
-    BOOLKIF      go to state 43
-    KIF          go to state 26
+    EXPRESSION     go to state 56
+    VARIABLE_EVAL  go to state 17
 
 
 State 37
 
-   15 BOOLKIF: BOOLKIF OR . BOOLKIF
+   34 EXPRESSION: EXPRESSION MINUS . EXPRESSION
 
-    INTNUMBER  shift, and go to state 1
-    L_ROUND    shift, and go to state 22
+    INTNUMBER     shift, and go to state 2
+    DOUBLENUMBER  shift, and go to state 3
+    L_ROUND       shift, and go to state 4
+    VARIABLE_ID   shift, and go to state 23
 
-    EQUALITY     go to state 23
-    NOTEQUALITY  go to state 24
-    BOOLKIF      go to state 44
-    KIF          go to state 26
+    EXPRESSION     go to state 57
+    VARIABLE_EVAL  go to state 17
 
 
 State 38
 
-   11 EQUALITY: KIF EQUAL . KIF
+   35 EXPRESSION: EXPRESSION MULTIPLY . EXPRESSION
 
-    INTNUMBER  shift, and go to state 1
-    L_ROUND    shift, and go to state 2
+    INTNUMBER     shift, and go to state 2
+    DOUBLENUMBER  shift, and go to state 3
+    L_ROUND       shift, and go to state 4
+    VARIABLE_ID   shift, and go to state 23
 
-    KIF  go to state 45
+    EXPRESSION     go to state 58
+    VARIABLE_EVAL  go to state 17
 
 
 State 39
 
-   12 NOTEQUALITY: KIF NOT_EQUAL . KIF
+   36 EXPRESSION: EXPRESSION DIVIDE . EXPRESSION
 
-    INTNUMBER  shift, and go to state 1
-    L_ROUND    shift, and go to state 2
+    INTNUMBER     shift, and go to state 2
+    DOUBLENUMBER  shift, and go to state 3
+    L_ROUND       shift, and go to state 4
+    VARIABLE_ID   shift, and go to state 23
 
-    KIF  go to state 46
+    EXPRESSION     go to state 59
+    VARIABLE_EVAL  go to state 17
 
 
 State 40
 
-   10 WHILEBLOCK: WHILE L_BOX BOOLKIF R_BOX . L_ANGLE PROG R_ANGLE
+   44 DECLARATION: ACCESS_MODIFIER DOUBLECOMMA . VARIABLE_ID L_ANGLE VARIABLE_TYPE
+   45            | ACCESS_MODIFIER DOUBLECOMMA . VARIABLE_ID PIPE VARIABLE_TYPE
 
-    L_ANGLE  shift, and go to state 47
+    VARIABLE_ID  shift, and go to state 60
 
 
 State 41
 
-   17 BOOLKIF: L_ROUND BOOLKIF R_ROUND .
+   37 EXPRESSION: L_ROUND EXPRESSION R_ROUND .
 
-    $default  reduce using rule 17 (BOOLKIF)
+    $default  reduce using rule 37 (EXPRESSION)
 
 
 State 42
 
-    8 IFBLOCK: IF L_BOX BOOLKIF R_BOX L_ANGLE . PROG R_ANGLE
-    9        | IF L_BOX BOOLKIF R_BOX L_ANGLE . PROG R_ANGLE ELSE L_ANGLE PROG R_ANGLE
+   29 BOOLEXPRESSION: error .
 
-    INTNUMBER  shift, and go to state 1
-    L_ROUND    shift, and go to state 2
-    IF         shift, and go to state 3
-    WHILE      shift, and go to state 4
-
-    PROG        go to state 48
-    UTASITAS    go to state 7
-    IFBLOCK     go to state 8
-    WHILEBLOCK  go to state 9
-    KIF         go to state 10
+    $default  reduce using rule 29 (BOOLEXPRESSION)
 
 
 State 43
 
-   15 BOOLKIF: BOOLKIF . OR BOOLKIF
-   16        | BOOLKIF . AND BOOLKIF
-   16        | BOOLKIF AND BOOLKIF .
+   28 BOOLEXPRESSION: L_ROUND . BOOLEXPRESSION R_ROUND
+   37 EXPRESSION: L_ROUND . EXPRESSION R_ROUND
 
-    $default  reduce using rule 16 (BOOLKIF)
+    error         shift, and go to state 42
+    INTNUMBER     shift, and go to state 2
+    DOUBLENUMBER  shift, and go to state 3
+    L_ROUND       shift, and go to state 43
+    VARIABLE_ID   shift, and go to state 23
+
+    EQUALITY        go to state 44
+    NOTEQUALITY     go to state 45
+    SMALLER         go to state 46
+    BIGGER          go to state 47
+    BOOLEXPRESSION  go to state 61
+    EXPRESSION      go to state 62
+    VARIABLE_EVAL   go to state 17
 
 
 State 44
 
-   15 BOOLKIF: BOOLKIF . OR BOOLKIF
-   15        | BOOLKIF OR BOOLKIF .
-   16        | BOOLKIF . AND BOOLKIF
+   22 BOOLEXPRESSION: EQUALITY .
 
-    $default  reduce using rule 15 (BOOLKIF)
+    $default  reduce using rule 22 (BOOLEXPRESSION)
 
 
 State 45
 
-   11 EQUALITY: KIF EQUAL KIF .
-   19 KIF: KIF . PLUS KIF
-   20    | KIF . MINUS KIF
-   21    | KIF . MULTIPLY KIF
-   22    | KIF . DIVIDE KIF
+   23 BOOLEXPRESSION: NOTEQUALITY .
 
-    PLUS      shift, and go to state 17
-    MINUS     shift, and go to state 18
-    MULTIPLY  shift, and go to state 19
-    DIVIDE    shift, and go to state 20
-
-    $default  reduce using rule 11 (EQUALITY)
+    $default  reduce using rule 23 (BOOLEXPRESSION)
 
 
 State 46
 
-   12 NOTEQUALITY: KIF NOT_EQUAL KIF .
-   19 KIF: KIF . PLUS KIF
-   20    | KIF . MINUS KIF
-   21    | KIF . MULTIPLY KIF
-   22    | KIF . DIVIDE KIF
+   24 BOOLEXPRESSION: SMALLER .
 
-    PLUS      shift, and go to state 17
-    MINUS     shift, and go to state 18
-    MULTIPLY  shift, and go to state 19
-    DIVIDE    shift, and go to state 20
-
-    $default  reduce using rule 12 (NOTEQUALITY)
+    $default  reduce using rule 24 (BOOLEXPRESSION)
 
 
 State 47
 
-   10 WHILEBLOCK: WHILE L_BOX BOOLKIF R_BOX L_ANGLE . PROG R_ANGLE
+   25 BOOLEXPRESSION: BIGGER .
 
-    INTNUMBER  shift, and go to state 1
-    L_ROUND    shift, and go to state 2
-    IF         shift, and go to state 3
-    WHILE      shift, and go to state 4
-
-    PROG        go to state 49
-    UTASITAS    go to state 7
-    IFBLOCK     go to state 8
-    WHILEBLOCK  go to state 9
-    KIF         go to state 10
+    $default  reduce using rule 25 (BOOLEXPRESSION)
 
 
 State 48
 
-    4 PROG: PROG . UTASITAS END
-    8 IFBLOCK: IF L_BOX BOOLKIF R_BOX L_ANGLE PROG . R_ANGLE
-    9        | IF L_BOX BOOLKIF R_BOX L_ANGLE PROG . R_ANGLE ELSE L_ANGLE PROG R_ANGLE
+   15 IFBLOCK: IF L_BOX BOOLEXPRESSION . R_BOX L_ANGLE PROG R_ANGLE
+   16        | IF L_BOX BOOLEXPRESSION . R_BOX L_ANGLE PROG L_ANGLE R_ANGLE PROG R_ANGLE
+   26 BOOLEXPRESSION: BOOLEXPRESSION . OR BOOLEXPRESSION
+   27               | BOOLEXPRESSION . AND BOOLEXPRESSION
 
-    INTNUMBER  shift, and go to state 1
-    L_ROUND    shift, and go to state 2
-    R_ANGLE    shift, and go to state 50
-
-    UTASITAS  go to state 15
-    KIF       go to state 10
+    R_BOX  shift, and go to state 63
+    AND    shift, and go to state 64
+    OR     shift, and go to state 65
 
 
 State 49
 
-    4 PROG: PROG . UTASITAS END
-   10 WHILEBLOCK: WHILE L_BOX BOOLKIF R_BOX L_ANGLE PROG . R_ANGLE
+   18 EQUALITY: EXPRESSION . EQUAL EXPRESSION
+   19 NOTEQUALITY: EXPRESSION . NOT_EQUAL EXPRESSION
+   20 SMALLER: EXPRESSION . L_ANGLE EXPRESSION
+   21 BIGGER: EXPRESSION . R_ANGLE EXPRESSION
+   33 EXPRESSION: EXPRESSION . PLUS EXPRESSION
+   34           | EXPRESSION . MINUS EXPRESSION
+   35           | EXPRESSION . MULTIPLY EXPRESSION
+   36           | EXPRESSION . DIVIDE EXPRESSION
 
-    INTNUMBER  shift, and go to state 1
-    L_ROUND    shift, and go to state 2
-    R_ANGLE    shift, and go to state 51
-
-    UTASITAS  go to state 15
-    KIF       go to state 10
+    PLUS       shift, and go to state 36
+    MINUS      shift, and go to state 37
+    MULTIPLY   shift, and go to state 38
+    DIVIDE     shift, and go to state 39
+    L_ANGLE    shift, and go to state 66
+    R_ANGLE    shift, and go to state 67
+    EQUAL      shift, and go to state 68
+    NOT_EQUAL  shift, and go to state 69
 
 
 State 50
 
-    8 IFBLOCK: IF L_BOX BOOLKIF R_BOX L_ANGLE PROG R_ANGLE .
-    9        | IF L_BOX BOOLKIF R_BOX L_ANGLE PROG R_ANGLE . ELSE L_ANGLE PROG R_ANGLE
+   17 WHILEBLOCK: WHILE L_BOX BOOLEXPRESSION . R_BOX L_ANGLE PROG R_ANGLE
+   26 BOOLEXPRESSION: BOOLEXPRESSION . OR BOOLEXPRESSION
+   27               | BOOLEXPRESSION . AND BOOLEXPRESSION
 
-    ELSE  shift, and go to state 52
-
-    $default  reduce using rule 8 (IFBLOCK)
+    R_BOX  shift, and go to state 70
+    AND    shift, and go to state 64
+    OR     shift, and go to state 65
 
 
 State 51
 
-   10 WHILEBLOCK: WHILE L_BOX BOOLKIF R_BOX L_ANGLE PROG R_ANGLE .
+   33 EXPRESSION: EXPRESSION . PLUS EXPRESSION
+   34           | EXPRESSION . MINUS EXPRESSION
+   35           | EXPRESSION . MULTIPLY EXPRESSION
+   36           | EXPRESSION . DIVIDE EXPRESSION
+   46 VARIABLE_ASSIGNMENT: VARIABLE_ID ASSIGNMENT EXPRESSION .
 
-    $default  reduce using rule 10 (WHILEBLOCK)
+    PLUS      shift, and go to state 36
+    MINUS     shift, and go to state 37
+    MULTIPLY  shift, and go to state 38
+    DIVIDE    shift, and go to state 39
+
+    $default  reduce using rule 46 (VARIABLE_ASSIGNMENT)
 
 
 State 52
 
-    9 IFBLOCK: IF L_BOX BOOLKIF R_BOX L_ANGLE PROG R_ANGLE ELSE . L_ANGLE PROG R_ANGLE
+   38 VARIABLE_TYPE: INTEGER_TYPE .
 
-    L_ANGLE  shift, and go to state 53
+    $default  reduce using rule 38 (VARIABLE_TYPE)
 
 
 State 53
 
-    9 IFBLOCK: IF L_BOX BOOLKIF R_BOX L_ANGLE PROG R_ANGLE ELSE L_ANGLE . PROG R_ANGLE
+   39 VARIABLE_TYPE: DOUBLE_TYPE .
 
-    INTNUMBER  shift, and go to state 1
-    L_ROUND    shift, and go to state 2
-    IF         shift, and go to state 3
-    WHILE      shift, and go to state 4
-
-    PROG        go to state 54
-    UTASITAS    go to state 7
-    IFBLOCK     go to state 8
-    WHILEBLOCK  go to state 9
-    KIF         go to state 10
+    $default  reduce using rule 39 (VARIABLE_TYPE)
 
 
 State 54
 
-    4 PROG: PROG . UTASITAS END
-    9 IFBLOCK: IF L_BOX BOOLKIF R_BOX L_ANGLE PROG R_ANGLE ELSE L_ANGLE PROG . R_ANGLE
+   41 VARIABLE_EVAL: VARIABLE_ID TILDA VARIABLE_TYPE .
 
-    INTNUMBER  shift, and go to state 1
-    L_ROUND    shift, and go to state 2
-    R_ANGLE    shift, and go to state 55
-
-    UTASITAS  go to state 15
-    KIF       go to state 10
+    $default  reduce using rule 41 (VARIABLE_EVAL)
 
 
 State 55
 
-    9 IFBLOCK: IF L_BOX BOOLKIF R_BOX L_ANGLE PROG R_ANGLE ELSE L_ANGLE PROG R_ANGLE .
+    4 PROG: PROG COMMAND END .
 
-    $default  reduce using rule 9 (IFBLOCK)
+    $default  reduce using rule 4 (PROG)
+
+
+State 56
+
+   33 EXPRESSION: EXPRESSION . PLUS EXPRESSION
+   33           | EXPRESSION PLUS EXPRESSION .
+   34           | EXPRESSION . MINUS EXPRESSION
+   35           | EXPRESSION . MULTIPLY EXPRESSION
+   36           | EXPRESSION . DIVIDE EXPRESSION
+
+    MULTIPLY  shift, and go to state 38
+    DIVIDE    shift, and go to state 39
+
+    $default  reduce using rule 33 (EXPRESSION)
+
+
+State 57
+
+   33 EXPRESSION: EXPRESSION . PLUS EXPRESSION
+   34           | EXPRESSION . MINUS EXPRESSION
+   34           | EXPRESSION MINUS EXPRESSION .
+   35           | EXPRESSION . MULTIPLY EXPRESSION
+   36           | EXPRESSION . DIVIDE EXPRESSION
+
+    MULTIPLY  shift, and go to state 38
+    DIVIDE    shift, and go to state 39
+
+    $default  reduce using rule 34 (EXPRESSION)
+
+
+State 58
+
+   33 EXPRESSION: EXPRESSION . PLUS EXPRESSION
+   34           | EXPRESSION . MINUS EXPRESSION
+   35           | EXPRESSION . MULTIPLY EXPRESSION
+   35           | EXPRESSION MULTIPLY EXPRESSION .
+   36           | EXPRESSION . DIVIDE EXPRESSION
+
+    $default  reduce using rule 35 (EXPRESSION)
+
+
+State 59
+
+   33 EXPRESSION: EXPRESSION . PLUS EXPRESSION
+   34           | EXPRESSION . MINUS EXPRESSION
+   35           | EXPRESSION . MULTIPLY EXPRESSION
+   36           | EXPRESSION . DIVIDE EXPRESSION
+   36           | EXPRESSION DIVIDE EXPRESSION .
+
+    $default  reduce using rule 36 (EXPRESSION)
+
+
+State 60
+
+   44 DECLARATION: ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID . L_ANGLE VARIABLE_TYPE
+   45            | ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID . PIPE VARIABLE_TYPE
+
+    L_ANGLE  shift, and go to state 71
+    PIPE     shift, and go to state 72
+
+
+State 61
+
+   26 BOOLEXPRESSION: BOOLEXPRESSION . OR BOOLEXPRESSION
+   27               | BOOLEXPRESSION . AND BOOLEXPRESSION
+   28               | L_ROUND BOOLEXPRESSION . R_ROUND
+
+    R_ROUND  shift, and go to state 73
+    AND      shift, and go to state 64
+    OR       shift, and go to state 65
+
+
+State 62
+
+   18 EQUALITY: EXPRESSION . EQUAL EXPRESSION
+   19 NOTEQUALITY: EXPRESSION . NOT_EQUAL EXPRESSION
+   20 SMALLER: EXPRESSION . L_ANGLE EXPRESSION
+   21 BIGGER: EXPRESSION . R_ANGLE EXPRESSION
+   33 EXPRESSION: EXPRESSION . PLUS EXPRESSION
+   34           | EXPRESSION . MINUS EXPRESSION
+   35           | EXPRESSION . MULTIPLY EXPRESSION
+   36           | EXPRESSION . DIVIDE EXPRESSION
+   37           | L_ROUND EXPRESSION . R_ROUND
+
+    PLUS       shift, and go to state 36
+    MINUS      shift, and go to state 37
+    MULTIPLY   shift, and go to state 38
+    DIVIDE     shift, and go to state 39
+    R_ROUND    shift, and go to state 41
+    L_ANGLE    shift, and go to state 66
+    R_ANGLE    shift, and go to state 67
+    EQUAL      shift, and go to state 68
+    NOT_EQUAL  shift, and go to state 69
+
+
+State 63
+
+   15 IFBLOCK: IF L_BOX BOOLEXPRESSION R_BOX . L_ANGLE PROG R_ANGLE
+   16        | IF L_BOX BOOLEXPRESSION R_BOX . L_ANGLE PROG L_ANGLE R_ANGLE PROG R_ANGLE
+
+    L_ANGLE  shift, and go to state 74
+
+
+State 64
+
+   27 BOOLEXPRESSION: BOOLEXPRESSION AND . BOOLEXPRESSION
+
+    error         shift, and go to state 42
+    INTNUMBER     shift, and go to state 2
+    DOUBLENUMBER  shift, and go to state 3
+    L_ROUND       shift, and go to state 43
+    VARIABLE_ID   shift, and go to state 23
+
+    EQUALITY        go to state 44
+    NOTEQUALITY     go to state 45
+    SMALLER         go to state 46
+    BIGGER          go to state 47
+    BOOLEXPRESSION  go to state 75
+    EXPRESSION      go to state 49
+    VARIABLE_EVAL   go to state 17
+
+
+State 65
+
+   26 BOOLEXPRESSION: BOOLEXPRESSION OR . BOOLEXPRESSION
+
+    error         shift, and go to state 42
+    INTNUMBER     shift, and go to state 2
+    DOUBLENUMBER  shift, and go to state 3
+    L_ROUND       shift, and go to state 43
+    VARIABLE_ID   shift, and go to state 23
+
+    EQUALITY        go to state 44
+    NOTEQUALITY     go to state 45
+    SMALLER         go to state 46
+    BIGGER          go to state 47
+    BOOLEXPRESSION  go to state 76
+    EXPRESSION      go to state 49
+    VARIABLE_EVAL   go to state 17
+
+
+State 66
+
+   20 SMALLER: EXPRESSION L_ANGLE . EXPRESSION
+
+    INTNUMBER     shift, and go to state 2
+    DOUBLENUMBER  shift, and go to state 3
+    L_ROUND       shift, and go to state 4
+    VARIABLE_ID   shift, and go to state 23
+
+    EXPRESSION     go to state 77
+    VARIABLE_EVAL  go to state 17
+
+
+State 67
+
+   21 BIGGER: EXPRESSION R_ANGLE . EXPRESSION
+
+    INTNUMBER     shift, and go to state 2
+    DOUBLENUMBER  shift, and go to state 3
+    L_ROUND       shift, and go to state 4
+    VARIABLE_ID   shift, and go to state 23
+
+    EXPRESSION     go to state 78
+    VARIABLE_EVAL  go to state 17
+
+
+State 68
+
+   18 EQUALITY: EXPRESSION EQUAL . EXPRESSION
+
+    INTNUMBER     shift, and go to state 2
+    DOUBLENUMBER  shift, and go to state 3
+    L_ROUND       shift, and go to state 4
+    VARIABLE_ID   shift, and go to state 23
+
+    EXPRESSION     go to state 79
+    VARIABLE_EVAL  go to state 17
+
+
+State 69
+
+   19 NOTEQUALITY: EXPRESSION NOT_EQUAL . EXPRESSION
+
+    INTNUMBER     shift, and go to state 2
+    DOUBLENUMBER  shift, and go to state 3
+    L_ROUND       shift, and go to state 4
+    VARIABLE_ID   shift, and go to state 23
+
+    EXPRESSION     go to state 80
+    VARIABLE_EVAL  go to state 17
+
+
+State 70
+
+   17 WHILEBLOCK: WHILE L_BOX BOOLEXPRESSION R_BOX . L_ANGLE PROG R_ANGLE
+
+    L_ANGLE  shift, and go to state 81
+
+
+State 71
+
+   44 DECLARATION: ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID L_ANGLE . VARIABLE_TYPE
+
+    INTEGER_TYPE  shift, and go to state 52
+    DOUBLE_TYPE   shift, and go to state 53
+
+    VARIABLE_TYPE  go to state 82
+
+
+State 72
+
+   45 DECLARATION: ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID PIPE . VARIABLE_TYPE
+
+    INTEGER_TYPE  shift, and go to state 52
+    DOUBLE_TYPE   shift, and go to state 53
+
+    VARIABLE_TYPE  go to state 83
+
+
+State 73
+
+   28 BOOLEXPRESSION: L_ROUND BOOLEXPRESSION R_ROUND .
+
+    $default  reduce using rule 28 (BOOLEXPRESSION)
+
+
+State 74
+
+   15 IFBLOCK: IF L_BOX BOOLEXPRESSION R_BOX L_ANGLE . PROG R_ANGLE
+   16        | IF L_BOX BOOLEXPRESSION R_BOX L_ANGLE . PROG L_ANGLE R_ANGLE PROG R_ANGLE
+
+    error            shift, and go to state 1
+    INTNUMBER        shift, and go to state 2
+    DOUBLENUMBER     shift, and go to state 3
+    L_ROUND          shift, and go to state 4
+    READ             shift, and go to state 5
+    PRINT            shift, and go to state 6
+    IF               shift, and go to state 7
+    WHILE            shift, and go to state 8
+    VARIABLE_ID      shift, and go to state 9
+    GLOBAL_MODIFIER  shift, and go to state 10
+
+    DOUBLECOMMA  reduce using rule 43 (ACCESS_MODIFIER)
+
+    PROG                 go to state 84
+    COMMAND              go to state 13
+    IFBLOCK              go to state 14
+    WHILEBLOCK           go to state 15
+    EXPRESSION           go to state 16
+    VARIABLE_EVAL        go to state 17
+    ACCESS_MODIFIER      go to state 18
+    DECLARATION          go to state 19
+    VARIABLE_ASSIGNMENT  go to state 20
+    READ_VARIABLE        go to state 21
+    PRINT_VARIABLE       go to state 22
+
+
+State 75
+
+   26 BOOLEXPRESSION: BOOLEXPRESSION . OR BOOLEXPRESSION
+   27               | BOOLEXPRESSION . AND BOOLEXPRESSION
+   27               | BOOLEXPRESSION AND BOOLEXPRESSION .
+
+    $default  reduce using rule 27 (BOOLEXPRESSION)
+
+
+State 76
+
+   26 BOOLEXPRESSION: BOOLEXPRESSION . OR BOOLEXPRESSION
+   26               | BOOLEXPRESSION OR BOOLEXPRESSION .
+   27               | BOOLEXPRESSION . AND BOOLEXPRESSION
+
+    $default  reduce using rule 26 (BOOLEXPRESSION)
+
+
+State 77
+
+   20 SMALLER: EXPRESSION L_ANGLE EXPRESSION .
+   33 EXPRESSION: EXPRESSION . PLUS EXPRESSION
+   34           | EXPRESSION . MINUS EXPRESSION
+   35           | EXPRESSION . MULTIPLY EXPRESSION
+   36           | EXPRESSION . DIVIDE EXPRESSION
+
+    PLUS      shift, and go to state 36
+    MINUS     shift, and go to state 37
+    MULTIPLY  shift, and go to state 38
+    DIVIDE    shift, and go to state 39
+
+    $default  reduce using rule 20 (SMALLER)
+
+
+State 78
+
+   21 BIGGER: EXPRESSION R_ANGLE EXPRESSION .
+   33 EXPRESSION: EXPRESSION . PLUS EXPRESSION
+   34           | EXPRESSION . MINUS EXPRESSION
+   35           | EXPRESSION . MULTIPLY EXPRESSION
+   36           | EXPRESSION . DIVIDE EXPRESSION
+
+    PLUS      shift, and go to state 36
+    MINUS     shift, and go to state 37
+    MULTIPLY  shift, and go to state 38
+    DIVIDE    shift, and go to state 39
+
+    $default  reduce using rule 21 (BIGGER)
+
+
+State 79
+
+   18 EQUALITY: EXPRESSION EQUAL EXPRESSION .
+   33 EXPRESSION: EXPRESSION . PLUS EXPRESSION
+   34           | EXPRESSION . MINUS EXPRESSION
+   35           | EXPRESSION . MULTIPLY EXPRESSION
+   36           | EXPRESSION . DIVIDE EXPRESSION
+
+    PLUS      shift, and go to state 36
+    MINUS     shift, and go to state 37
+    MULTIPLY  shift, and go to state 38
+    DIVIDE    shift, and go to state 39
+
+    $default  reduce using rule 18 (EQUALITY)
+
+
+State 80
+
+   19 NOTEQUALITY: EXPRESSION NOT_EQUAL EXPRESSION .
+   33 EXPRESSION: EXPRESSION . PLUS EXPRESSION
+   34           | EXPRESSION . MINUS EXPRESSION
+   35           | EXPRESSION . MULTIPLY EXPRESSION
+   36           | EXPRESSION . DIVIDE EXPRESSION
+
+    PLUS      shift, and go to state 36
+    MINUS     shift, and go to state 37
+    MULTIPLY  shift, and go to state 38
+    DIVIDE    shift, and go to state 39
+
+    $default  reduce using rule 19 (NOTEQUALITY)
+
+
+State 81
+
+   17 WHILEBLOCK: WHILE L_BOX BOOLEXPRESSION R_BOX L_ANGLE . PROG R_ANGLE
+
+    error            shift, and go to state 1
+    INTNUMBER        shift, and go to state 2
+    DOUBLENUMBER     shift, and go to state 3
+    L_ROUND          shift, and go to state 4
+    READ             shift, and go to state 5
+    PRINT            shift, and go to state 6
+    IF               shift, and go to state 7
+    WHILE            shift, and go to state 8
+    VARIABLE_ID      shift, and go to state 9
+    GLOBAL_MODIFIER  shift, and go to state 10
+
+    DOUBLECOMMA  reduce using rule 43 (ACCESS_MODIFIER)
+
+    PROG                 go to state 85
+    COMMAND              go to state 13
+    IFBLOCK              go to state 14
+    WHILEBLOCK           go to state 15
+    EXPRESSION           go to state 16
+    VARIABLE_EVAL        go to state 17
+    ACCESS_MODIFIER      go to state 18
+    DECLARATION          go to state 19
+    VARIABLE_ASSIGNMENT  go to state 20
+    READ_VARIABLE        go to state 21
+    PRINT_VARIABLE       go to state 22
+
+
+State 82
+
+   44 DECLARATION: ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID L_ANGLE VARIABLE_TYPE .
+
+    $default  reduce using rule 44 (DECLARATION)
+
+
+State 83
+
+   45 DECLARATION: ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID PIPE VARIABLE_TYPE .
+
+    $default  reduce using rule 45 (DECLARATION)
+
+
+State 84
+
+    4 PROG: PROG . COMMAND END
+    7     | PROG . IFBLOCK
+    8     | PROG . WHILEBLOCK
+   15 IFBLOCK: IF L_BOX BOOLEXPRESSION R_BOX L_ANGLE PROG . R_ANGLE
+   16        | IF L_BOX BOOLEXPRESSION R_BOX L_ANGLE PROG . L_ANGLE R_ANGLE PROG R_ANGLE
+
+    INTNUMBER        shift, and go to state 2
+    DOUBLENUMBER     shift, and go to state 3
+    L_ROUND          shift, and go to state 4
+    L_ANGLE          shift, and go to state 86
+    R_ANGLE          shift, and go to state 87
+    READ             shift, and go to state 5
+    PRINT            shift, and go to state 6
+    IF               shift, and go to state 7
+    WHILE            shift, and go to state 8
+    VARIABLE_ID      shift, and go to state 9
+    GLOBAL_MODIFIER  shift, and go to state 10
+
+    $default  reduce using rule 43 (ACCESS_MODIFIER)
+
+    COMMAND              go to state 32
+    IFBLOCK              go to state 33
+    WHILEBLOCK           go to state 34
+    EXPRESSION           go to state 16
+    VARIABLE_EVAL        go to state 17
+    ACCESS_MODIFIER      go to state 18
+    DECLARATION          go to state 19
+    VARIABLE_ASSIGNMENT  go to state 20
+    READ_VARIABLE        go to state 21
+    PRINT_VARIABLE       go to state 22
+
+
+State 85
+
+    4 PROG: PROG . COMMAND END
+    7     | PROG . IFBLOCK
+    8     | PROG . WHILEBLOCK
+   17 WHILEBLOCK: WHILE L_BOX BOOLEXPRESSION R_BOX L_ANGLE PROG . R_ANGLE
+
+    INTNUMBER        shift, and go to state 2
+    DOUBLENUMBER     shift, and go to state 3
+    L_ROUND          shift, and go to state 4
+    R_ANGLE          shift, and go to state 88
+    READ             shift, and go to state 5
+    PRINT            shift, and go to state 6
+    IF               shift, and go to state 7
+    WHILE            shift, and go to state 8
+    VARIABLE_ID      shift, and go to state 9
+    GLOBAL_MODIFIER  shift, and go to state 10
+
+    $default  reduce using rule 43 (ACCESS_MODIFIER)
+
+    COMMAND              go to state 32
+    IFBLOCK              go to state 33
+    WHILEBLOCK           go to state 34
+    EXPRESSION           go to state 16
+    VARIABLE_EVAL        go to state 17
+    ACCESS_MODIFIER      go to state 18
+    DECLARATION          go to state 19
+    VARIABLE_ASSIGNMENT  go to state 20
+    READ_VARIABLE        go to state 21
+    PRINT_VARIABLE       go to state 22
+
+
+State 86
+
+   16 IFBLOCK: IF L_BOX BOOLEXPRESSION R_BOX L_ANGLE PROG L_ANGLE . R_ANGLE PROG R_ANGLE
+
+    R_ANGLE  shift, and go to state 89
+
+
+State 87
+
+   15 IFBLOCK: IF L_BOX BOOLEXPRESSION R_BOX L_ANGLE PROG R_ANGLE .
+
+    $default  reduce using rule 15 (IFBLOCK)
+
+
+State 88
+
+   17 WHILEBLOCK: WHILE L_BOX BOOLEXPRESSION R_BOX L_ANGLE PROG R_ANGLE .
+
+    $default  reduce using rule 17 (WHILEBLOCK)
+
+
+State 89
+
+   16 IFBLOCK: IF L_BOX BOOLEXPRESSION R_BOX L_ANGLE PROG L_ANGLE R_ANGLE . PROG R_ANGLE
+
+    error            shift, and go to state 1
+    INTNUMBER        shift, and go to state 2
+    DOUBLENUMBER     shift, and go to state 3
+    L_ROUND          shift, and go to state 4
+    READ             shift, and go to state 5
+    PRINT            shift, and go to state 6
+    IF               shift, and go to state 7
+    WHILE            shift, and go to state 8
+    VARIABLE_ID      shift, and go to state 9
+    GLOBAL_MODIFIER  shift, and go to state 10
+
+    DOUBLECOMMA  reduce using rule 43 (ACCESS_MODIFIER)
+
+    PROG                 go to state 90
+    COMMAND              go to state 13
+    IFBLOCK              go to state 14
+    WHILEBLOCK           go to state 15
+    EXPRESSION           go to state 16
+    VARIABLE_EVAL        go to state 17
+    ACCESS_MODIFIER      go to state 18
+    DECLARATION          go to state 19
+    VARIABLE_ASSIGNMENT  go to state 20
+    READ_VARIABLE        go to state 21
+    PRINT_VARIABLE       go to state 22
+
+
+State 90
+
+    4 PROG: PROG . COMMAND END
+    7     | PROG . IFBLOCK
+    8     | PROG . WHILEBLOCK
+   16 IFBLOCK: IF L_BOX BOOLEXPRESSION R_BOX L_ANGLE PROG L_ANGLE R_ANGLE PROG . R_ANGLE
+
+    INTNUMBER        shift, and go to state 2
+    DOUBLENUMBER     shift, and go to state 3
+    L_ROUND          shift, and go to state 4
+    R_ANGLE          shift, and go to state 91
+    READ             shift, and go to state 5
+    PRINT            shift, and go to state 6
+    IF               shift, and go to state 7
+    WHILE            shift, and go to state 8
+    VARIABLE_ID      shift, and go to state 9
+    GLOBAL_MODIFIER  shift, and go to state 10
+
+    $default  reduce using rule 43 (ACCESS_MODIFIER)
+
+    COMMAND              go to state 32
+    IFBLOCK              go to state 33
+    WHILEBLOCK           go to state 34
+    EXPRESSION           go to state 16
+    VARIABLE_EVAL        go to state 17
+    ACCESS_MODIFIER      go to state 18
+    DECLARATION          go to state 19
+    VARIABLE_ASSIGNMENT  go to state 20
+    READ_VARIABLE        go to state 21
+    PRINT_VARIABLE       go to state 22
+
+
+State 91
+
+   16 IFBLOCK: IF L_BOX BOOLEXPRESSION R_BOX L_ANGLE PROG L_ANGLE R_ANGLE PROG R_ANGLE .
+
+    $default  reduce using rule 16 (IFBLOCK)
