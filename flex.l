@@ -122,22 +122,22 @@ ID    [a-zA-Z][a-zA-Z0-9]*
 }
 
 "es" {
-  poz[1] += 1;
-  poz[2] = 1;
+  poz[1] += 2;
+  poz[2] = 2;
 
   return AND;
 }
 
 "vagy" {
-  poz[1] += 1;
-  poz[2] = 1;
+  poz[1] += 4;
+  poz[2] = 4;
 
   return OR;
 }
 
 "forditva" {
-  poz[1] += 3;
-  poz[2] = 3;
+  poz[1] += 8;
+  poz[2] = 8;
 
   return NOT;
 }
@@ -150,50 +150,50 @@ ID    [a-zA-Z][a-zA-Z0-9]*
 }
 
 "beolvas" {
-  poz[1] += 4;
-  poz[2] = 4;
+  poz[1] += 7;
+  poz[2] = 7;
 
   return READ;
 }
 
 "kiir" {
-  poz[1] += 5;
-  poz[2] = 5;
+  poz[1] += 4;
+  poz[2] = 4;
 
   return PRINT;
 }
 
 "vajon" {
-  poz[1] += 2;
-  poz[2] = 2;
+  poz[1] += 5;
+  poz[2] = 5;
 
   return IF;
 }
 
-"nemis" {
-  poz[1] += 4;
-  poz[2] = 4;
+"nemjo" {
+  poz[1] += 5;
+  poz[2] = 5;
 
   return ELSE;
 }
 
 "fesztegyet" {
-  poz[1] += 5;
-  poz[2] = 5;
+  poz[1] += 10;
+  poz[2] = 10;
 
   return WHILE;
 }
 
-"egeszecske" {
-  poz[1] += 3;
-  poz[2] = 3;
+"egeszke" {
+  poz[1] += 7;
+  poz[2] = 7;
 
   return INTEGER_TYPE;
 }
 
 "pottyos" {
-  poz[1] += 6;
-  poz[2] = 6;
+  poz[1] += 7;
+  poz[2] = 7;
 
   return DOUBLE_TYPE;
 }
