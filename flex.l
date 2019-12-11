@@ -1,6 +1,7 @@
 %{
 #include <iostream>
 #include <stdlib.h>
+#include <string.h>
 #include "bison.tab.h"
 
 using namespace std;
@@ -229,7 +230,7 @@ ID    [a-zA-Z][a-zA-Z0-9]*
 {ID} {
   poz[1] += yyleng;
   poz[2] = yyleng;
-
+  yylval.str =strdup(yytext); 
   return VARIABLE_ID;
 }
 

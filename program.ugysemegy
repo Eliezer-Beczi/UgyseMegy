@@ -3,17 +3,19 @@ nemzetkozi: szam < pottyos;
 : tomb | pottyos;
 beolvas tomb;
 
-vajon [ a == ((((1.5+1)*2)*2)*2) es  max < ((((1.5-1)*2)*2)*2)] 
+vajon [ forditva (a != ((((1.5/1)*2)*2)*2)) vagy a == ((((1.5+1)*2)*2)*2) es  max < ((((1.5-1)*2)*2)*2)] 
 < 
-1+1;    
+ -1; 
 <>
     nemzetkozi:  b < egeszke;    
     :  c < pottyos ;
     :  b |  pottyos;
     b~pottyos;
-    fesztegyet [ a < 5] <
+    fesztegyet [ a < 5] 
+    <
         max = max+1;
     >
+     maxs  = max+1;
 >
 kiir max;
 

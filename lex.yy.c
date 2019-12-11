@@ -509,14 +509,15 @@ char *yytext;
 #line 2 "flex.l"
 #include <iostream>
 #include <stdlib.h>
+#include <string.h>
 #include "bison.tab.h"
 
 using namespace std;
 
 int poz[] = {1, 0, 0};
 
-#line 519 "lex.yy.c"
 #line 520 "lex.yy.c"
+#line 521 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -733,10 +734,10 @@ YY_DECL
 		}
 
 	{
-#line 17 "flex.l"
+#line 18 "flex.l"
 
 
-#line 740 "lex.yy.c"
+#line 741 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -795,7 +796,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 19 "flex.l"
+#line 20 "flex.l"
 {
   poz[1] += 1;
   poz[2] = 1;
@@ -805,7 +806,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 26 "flex.l"
+#line 27 "flex.l"
 {
   poz[1] += 1;
   poz[2] = 1;
@@ -815,7 +816,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 33 "flex.l"
+#line 34 "flex.l"
 {
   poz[1] += 1;
   poz[2] = 1;
@@ -825,7 +826,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 40 "flex.l"
+#line 41 "flex.l"
 {
   poz[1] += 1;
   poz[2] = 1;
@@ -835,7 +836,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 47 "flex.l"
+#line 48 "flex.l"
 {
   poz[1] += 1;
   poz[2] = 1;
@@ -845,7 +846,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 54 "flex.l"
+#line 55 "flex.l"
 {
   poz[1] += 1;
   poz[2] = 1;
@@ -855,7 +856,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 61 "flex.l"
+#line 62 "flex.l"
 {
   poz[1] += 1;
   poz[2] = 1;
@@ -865,7 +866,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 68 "flex.l"
+#line 69 "flex.l"
 {
   poz[1] += 1;
   poz[2] = 1;
@@ -875,7 +876,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 75 "flex.l"
+#line 76 "flex.l"
 {
   poz[1] += 1;
   poz[2] = 1;
@@ -885,7 +886,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 82 "flex.l"
+#line 83 "flex.l"
 {
   poz[1] += 1;
   poz[2] = 1;
@@ -895,7 +896,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 89 "flex.l"
+#line 90 "flex.l"
 {
   poz[1] += 1;
   poz[2] = 1;
@@ -905,7 +906,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 96 "flex.l"
+#line 97 "flex.l"
 {
   poz[1] += 1;
   poz[2] = 1;
@@ -915,7 +916,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 103 "flex.l"
+#line 104 "flex.l"
 {
   poz[1] += 1;
   poz[2] = 1;
@@ -925,7 +926,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 110 "flex.l"
+#line 111 "flex.l"
 {
   poz[1] += 1;
   poz[2] = 1;
@@ -935,7 +936,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 117 "flex.l"
+#line 118 "flex.l"
 {
   poz[1] += 1;
   poz[2] = 1;
@@ -945,7 +946,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 124 "flex.l"
+#line 125 "flex.l"
 {
   poz[1] += 1;
   poz[2] = 1;
@@ -955,7 +956,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 131 "flex.l"
+#line 132 "flex.l"
 {
   poz[1] += 2;
   poz[2] = 2;
@@ -965,7 +966,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 138 "flex.l"
+#line 139 "flex.l"
 {
   poz[1] += 2;
   poz[2] = 2;
@@ -975,7 +976,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 145 "flex.l"
+#line 146 "flex.l"
 {
   poz[1] += 2;
   poz[2] = 2;
@@ -985,7 +986,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 152 "flex.l"
+#line 153 "flex.l"
 {
   poz[1] += 4;
   poz[2] = 4;
@@ -995,7 +996,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 159 "flex.l"
+#line 160 "flex.l"
 {
   poz[1] += 8;
   poz[2] = 8;
@@ -1005,7 +1006,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 166 "flex.l"
+#line 167 "flex.l"
 {
   poz[1] += 10;
   poz[2] = 10;
@@ -1015,7 +1016,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 173 "flex.l"
+#line 174 "flex.l"
 {
   poz[1] += 1;
   poz[2] = 1;
@@ -1025,7 +1026,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 180 "flex.l"
+#line 181 "flex.l"
 {
   poz[1] += 7;
   poz[2] = 7;
@@ -1035,7 +1036,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 187 "flex.l"
+#line 188 "flex.l"
 {
   poz[1] += 4;
   poz[2] = 4;
@@ -1045,7 +1046,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 194 "flex.l"
+#line 195 "flex.l"
 {
   poz[1] += 5;
   poz[2] = 5;
@@ -1055,7 +1056,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 201 "flex.l"
+#line 202 "flex.l"
 {
   poz[1] += 5;
   poz[2] = 5;
@@ -1065,7 +1066,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 208 "flex.l"
+#line 209 "flex.l"
 {
   poz[1] += 10;
   poz[2] = 10;
@@ -1075,7 +1076,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 215 "flex.l"
+#line 216 "flex.l"
 {
   poz[1] += 7;
   poz[2] = 7;
@@ -1085,7 +1086,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 222 "flex.l"
+#line 223 "flex.l"
 {
   poz[1] += 7;
   poz[2] = 7;
@@ -1095,17 +1096,17 @@ YY_RULE_SETUP
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 229 "flex.l"
+#line 230 "flex.l"
 {
   poz[1] += yyleng;
   poz[2] = yyleng;
-
+  yylval.str =strdup(yytext); 
   return VARIABLE_ID;
 }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 236 "flex.l"
+#line 237 "flex.l"
 {
   poz[1] += yyleng;
   poz[2] = yyleng;
@@ -1116,7 +1117,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 244 "flex.l"
+#line 245 "flex.l"
 {
   poz[1] += yyleng;
   poz[2] = yyleng;
@@ -1129,7 +1130,7 @@ YY_RULE_SETUP
 case 34:
 /* rule 34 can match eol */
 YY_RULE_SETUP
-#line 253 "flex.l"
+#line 254 "flex.l"
 {
   ++poz[0];
   poz[1] = 1;
@@ -1138,7 +1139,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 259 "flex.l"
+#line 260 "flex.l"
 {
   poz[1] += yyleng;
   poz[2] = yyleng;
@@ -1146,7 +1147,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 264 "flex.l"
+#line 265 "flex.l"
 {
   poz[1] += 1;
   poz[2] = 1;
@@ -1154,10 +1155,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 269 "flex.l"
+#line 270 "flex.l"
 ECHO;
 	YY_BREAK
-#line 1161 "lex.yy.c"
+#line 1162 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2162,6 +2163,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 269 "flex.l"
+#line 270 "flex.l"
 
 

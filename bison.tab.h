@@ -47,41 +47,38 @@ extern int yydebug;
   {
     INTNUMBER = 258,
     DOUBLENUMBER = 259,
-    PLUS = 260,
-    MINUS = 261,
-    MULTIPLY = 262,
-    DIVIDE = 263,
-    ASSIGNMENT = 264,
-    L_BOX = 265,
-    R_BOX = 266,
-    L_ROUND = 267,
-    R_ROUND = 268,
-    L_CURLY = 269,
-    R_CURLY = 270,
-    L_ANGLE = 271,
-    R_ANGLE = 272,
-    EQUAL = 273,
-    NOT_EQUAL = 274,
-    AND = 275,
-    OR = 276,
-    NOT = 277,
-    END = 278,
-    READ = 279,
-    PRINT = 280,
-    IF = 281,
-    ELSE = 282,
-    WHILE = 283,
-    INTEGER_TYPE = 284,
-    DOUBLE_TYPE = 285,
-    VARIABLE_ID = 286,
-    GLOBAL_MODIFIER = 287,
-    PIPE = 288,
-    DOUBLECOMMA = 289,
-    TILDA = 290,
-    INT = 291,
-    FLOAT = 292,
-    DOUBLE = 293,
-    STR = 294
+    STR = 260,
+    PLUS = 261,
+    MINUS = 262,
+    MULTIPLY = 263,
+    DIVIDE = 264,
+    ASSIGNMENT = 265,
+    L_BOX = 266,
+    R_BOX = 267,
+    L_ROUND = 268,
+    R_ROUND = 269,
+    L_CURLY = 270,
+    R_CURLY = 271,
+    L_ANGLE = 272,
+    R_ANGLE = 273,
+    EQUAL = 274,
+    NOT_EQUAL = 275,
+    AND = 276,
+    OR = 277,
+    NOT = 278,
+    END = 279,
+    READ = 280,
+    PRINT = 281,
+    IF = 282,
+    ELSE = 283,
+    WHILE = 284,
+    INTEGER_TYPE = 285,
+    DOUBLE_TYPE = 286,
+    VARIABLE_ID = 287,
+    GLOBAL_MODIFIER = 288,
+    PIPE = 289,
+    DOUBLECOMMA = 290,
+    TILDA = 291
   };
 #endif
 
@@ -90,14 +87,14 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 10 "bison.y" /* yacc.c:1909  */
+#line 26 "bison.y" /* yacc.c:1909  */
 
   int ival;
   float fval;
   double dval;
   char* str;
 
-#line 101 "bison.tab.h" /* yacc.c:1909  */
+#line 98 "bison.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

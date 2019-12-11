@@ -1,0 +1,14 @@
+:a < egeszke;
+
+vajon [ a < 9] 
+< 
+ :b < pottyos;
+ b = 5 + b;
+>
+
+vajon [ a < 9] 
+< 
+:a < pottyos;
+a = 9;
+>
+

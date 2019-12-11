@@ -1,0 +1,44 @@
+
+nemzetkozi: szam < pottyos;
+: tomb | pottyos;
+beolvas tomb;
+
+ <#max x,max : <#
+                            ? [   $x|  ]
+                            <#
+                                #max
+                            >
+                            <#
+                            
+                                ? [ max < $x ] 
+                                <#
+                                    #:max $1x: $x                                     
+                                >
+                                <#
+                                    #:max $1x:max
+                                >
+                            >
+                                                                                   
+                 >
+ >
+ <
+
+
+
+
+
+kiir max;
+
+// 
+int x[];
+int i;
+int max;
+i=0;
+max = x[0];
+
+while(i<x.size()){
+    if(max < x[i]){
+        max = x[i];
+    }
+    i=i+1;
+}
