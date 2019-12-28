@@ -3,22 +3,56 @@
 #include <unordered_map>
 #include <utility> 
 #include <vector> 
+#include "ugysemegytocpp.h"
+
 using namespace std;
 
 int yyerror(const char*);
 extern int yylex();
 extern int poz[];
-typedef unordered_map<string,int> scope;
+
+struct ugysemegyVar{
+	int type;
+	bool array;	
+	string id;
+	string buffer;
+};
+
+struct expression{
+	string buffer;
+	int type;
+};
+typedef unordered_map<string,ugysemegyVar> scope;
 vector<scope> symbolTable(1);
-int getVar(char* id){	
+vector<expression*> expressions;
+vector<ugysemegyVar*> vars;
+
+void printErr(std::string message){
+	yyerror(message.c_str());
+}
+ugysemegyVar& getVar(string id){
 	
 	for( vector<scope>::reverse_iterator iter = symbolTable.rbegin();iter != symbolTable.rend();++iter){
-		if((*iter).find(string(id)) != (*iter).end()){						
-			return (*iter)[string(id)];
+		if((*iter).find(id) != (*iter).end()){						
+			return (*iter)[id];
 		}	
 	} 	
-	string errorMessage = "Dezső, elrontottad, miért nem deklaráltál ilyen változót "+string(id);
-	yyerror(errorMessage.c_str());		
+	printErr("Dezső, elrontottad, miért nem deklaráltál ilyen változót "+id);	
+}
+void freeExpressions(){
+	for(int i=0;i<expressions.size();++i){
+		delete expressions[i];
+	}
+}
+void freeVars(){
+	for(int i=0;i<vars.size();++i){
+		delete vars[i];
+	}
+}
+expression* getExpression(){
+	expression* expr=new expression;
+	expressions.push_back(expr);
+	return expr;
 }
 %}
 
@@ -27,11 +61,14 @@ int getVar(char* id){
   int ival;
   float fval;
   double dval;
-  char* str;
+  char* str;    
+  struct ugysemegyVar* uVar;
+  bool boolean;
+  struct expression* expr;
 }
 %start START
-%token<ival> INTNUMBER
-%token<dval> DOUBLENUMBER
+%token<str> INTNUMBER
+%token<str> DOUBLENUMBER
 %token <str> STR
 
 %token PLUS
@@ -77,90 +114,159 @@ int getVar(char* id){
 %left  MULTIPLY DIVIDE
 
 %left  OR AND
-%type<dval> EXPRESSION
+%type<expr> EXPRESSION
+%type<expr> BOOLEXPRESSION
+%type<expr> EQUALITY
+%type<expr> NOTEQUALITY
+%type<expr> BIGGER
+%type<expr> SMALLER
 %type<ival> VARIABLE_TYPE
-%type<ival> VARIABLE_EVAL
+%type<expr> VARIABLE_EVAL
+%type<uVar> VARIABLE
+%type<expr> INDEXING
+%token NOT_INDEXED;
 %%
 
 START: 
-	PROG 
+	{writeMain();}PROG {writeEnd(); freeExpressions();freeVars();}
 	| // empty
 ;
 
 PROG:
-	  COMMAND END
-	| PROG  COMMAND END
-	| IFBLOCK
+	  COMMAND END 
+	| PROG  COMMAND END 
+	| IFBLOCK 
 	| WHILEBLOCK	
 	| PROG IFBLOCK 
 	| PROG WHILEBLOCK
 	| error	
 ; 
 
-COMMAND:  EXPRESSION { }
-		| DECLARATION
-		| VARIABLE_ASSIGNMENT 
-		| READ_VARIABLE
-		| PRINT_VARIABLE
+COMMAND:  EXPRESSION {dot();} 
+		| DECLARATION {dot();} 
+		| VARIABLE_ASSIGNMENT {dot();} 
+		| READ_VARIABLE {dot();} 
+		| PRINT_VARIABLE {dot();} 
+		| VARIABLE_SWAP {dot();} 
 ;
 
 push: {scope map;symbolTable.push_back(map);};
-pop:{symbolTable.pop_back();}
-
-IFBLOCK: IF L_BOX BOOLEXPRESSION R_BOX  push L_ANGLE PROG  R_ANGLE 		pop
-		|IF L_BOX BOOLEXPRESSION R_BOX  push L_ANGLE  PROG  L_ANGLE  pop push R_ANGLE   PROG  R_ANGLE pop
+pop:{symbolTable.pop_back();};
+openIf: IF L_BOX {openIf();};
+continueIf:L_ANGLE {openBlock();} PROG {closeBlock();};
+captureExpression: BOOLEXPRESSION  R_BOX {writeExpression($1->buffer);};
+IFBLOCK: openIf  captureExpression  push continueIf  R_ANGLE 		pop
+		|openIf  captureExpression  push continueIf  L_ANGLE  pop push R_ANGLE {writeElse();} PROG {closeBlock();} R_ANGLE pop
 ;
 
-WHILEBLOCK:   WHILE L_BOX BOOLEXPRESSION R_BOX L_ANGLE  push PROG pop R_ANGLE			
+WHILEBLOCK:   WHILE {openWhile();} L_BOX BOOLEXPRESSION {writeExpression($4->buffer);} R_BOX {openBlock();}L_ANGLE  push PROG pop R_ANGLE {closeBlock();}			
 ;
 
 
-EQUALITY: EXPRESSION EQUAL EXPRESSION
-;
-NOTEQUALITY: EXPRESSION NOT_EQUAL EXPRESSION
+EQUALITY:  EXPRESSION  EQUAL  EXPRESSION {expression* expr = getExpression(); expr->buffer =  $1->buffer+getEquals()+$3->buffer; $$ = expr;}
 ;
 
-SMALLER: EXPRESSION L_ANGLE EXPRESSION
-;
-BIGGER: EXPRESSION R_ANGLE EXPRESSION
+NOTEQUALITY: EXPRESSION NOT_EQUAL  EXPRESSION {expression* expr = getExpression(); expr->buffer = $1->buffer+getNotEquals()+$3->buffer;$$ = expr; }
 ;
 
-BOOLEXPRESSION:  EQUALITY
-		|  NOTEQUALITY
-		|  SMALLER
-		|  BIGGER
-		|  BOOLEXPRESSION OR BOOLEXPRESSION
-		|  BOOLEXPRESSION AND BOOLEXPRESSION
-		|  L_ROUND BOOLEXPRESSION R_ROUND
-		|  NOT L_ROUND BOOLEXPRESSION R_ROUND
-		|  error
+SMALLER: EXPRESSION L_ANGLE  EXPRESSION {expression* expr = getExpression(); expr->buffer = $1->buffer+getLessThan()+$3->buffer; $$ = expr;}
 ;
 
-EXPRESSION: VARIABLE_EVAL {$$ = DOUBLENUMBER;}
-	| INTNUMBER {$$ = INTNUMBER;}
-	| DOUBLENUMBER {$$ = DOUBLENUMBER;}
-	| EXPRESSION  PLUS EXPRESSION { ( $1 == DOUBLENUMBER || $3 == DOUBLENUMBER )?$$ = DOUBLENUMBER:$$ = INTNUMBER;}
-	| EXPRESSION  MINUS EXPRESSION { ( $1 == DOUBLENUMBER || $3 == DOUBLENUMBER )?$$ = DOUBLENUMBER:$$ = INTNUMBER;}
-	| EXPRESSION  MULTIPLY EXPRESSION { ( $1 == DOUBLENUMBER || $3 == DOUBLENUMBER )?$$ = DOUBLENUMBER:$$ = INTNUMBER;}
-	| EXPRESSION  DIVIDE EXPRESSION { ( $1 == DOUBLENUMBER || $3 == DOUBLENUMBER )?$$ = DOUBLENUMBER:$$ = INTNUMBER;}
-	| PLUS EXPRESSION {$$ =  $2;}
-	| MINUS EXPRESSION {$$ = $2;}
-	| L_ROUND EXPRESSION R_ROUND { $$ = $2;}
+BIGGER: EXPRESSION R_ANGLE  EXPRESSION {expression* expr = getExpression(); expr->buffer = $1->buffer+getGreaterThan()+$3->buffer;$$ = expr; }
+;
+
+BOOLEXPRESSION:   EQUALITY  { $$ = $1;}
+		|  NOTEQUALITY { $$ = $1;}
+		|  SMALLER { $$ = $1;}
+		|  BIGGER { $$ = $1;}
+		|  BOOLEXPRESSION OR BOOLEXPRESSION { expression* expr = getExpression(); expr->buffer = $1->buffer + getOr() + $3->buffer; $$ = expr; }
+		|  BOOLEXPRESSION AND  BOOLEXPRESSION { expression* expr = getExpression(); expr->buffer = $1->buffer + getAnd() + $3->buffer; $$ = expr;}
+		|  L_ROUND   BOOLEXPRESSION R_ROUND  { expression* expr = getExpression(); expr->buffer = "(" + $2->buffer+ ")"; $$ = expr;}
+		|  NOT  L_ROUND  BOOLEXPRESSION R_ROUND { expression* expr = getExpression(); expr->buffer = getNot()+"(" + $3->buffer+ ")"; $$ = expr;}
+		|  error { expression* expr = getExpression(); expr->buffer = "error";$$ = expr;}
+;
+
+EXPRESSION: VARIABLE_EVAL {  $$ = $1;}
+	| INTNUMBER { expression* expr = getExpression(); expr->type =  INTNUMBER; expr->buffer = string($1); $$ = expr;}
+	| DOUBLENUMBER { expression* expr = getExpression(); expr->type =  DOUBLENUMBER; expr->buffer = string($1); $$ = expr;}
+	| EXPRESSION  PLUS EXPRESSION { expression* expr = getExpression(); 
+									( $1->type == DOUBLENUMBER || $3->type == DOUBLENUMBER )?expr->type = DOUBLENUMBER:expr->type = INTNUMBER; 
+									expr->buffer = $1->buffer + " + " + $3->buffer;
+									$$ = expr;}
+	| EXPRESSION  MINUS EXPRESSION { expression* expr = getExpression(); 
+									( $1->type == DOUBLENUMBER || $3->type == DOUBLENUMBER )?expr->type = DOUBLENUMBER:expr->type = INTNUMBER; 
+									expr->buffer = $1->buffer + " - " + $3->buffer;
+									$$ = expr;}
+	| EXPRESSION  MULTIPLY EXPRESSION { expression* expr = getExpression(); 
+									( $1->type == DOUBLENUMBER || $3->type == DOUBLENUMBER )?expr->type = DOUBLENUMBER:expr->type = INTNUMBER; 
+									expr->buffer = $1->buffer + " * " + $3->buffer;
+									$$ = expr;}
+	| EXPRESSION  DIVIDE EXPRESSION { expression* expr = getExpression(); 
+									( $1->type == DOUBLENUMBER || $3->type == DOUBLENUMBER )?expr->type = DOUBLENUMBER:expr->type = INTNUMBER; 
+									expr->buffer = $1->buffer + " / " + $3->buffer;
+									$$ = expr;}
+	| PLUS EXPRESSION { expression* expr = getExpression(); 
+									( $2->type == DOUBLENUMBER )?expr->type = DOUBLENUMBER:expr->type = INTNUMBER; 
+									expr->buffer =  " + " + $2->buffer;
+									$$ = expr;}
+	| MINUS EXPRESSION { expression* expr = getExpression(); 
+									( $2->type == DOUBLENUMBER )?expr->type = DOUBLENUMBER:expr->type = INTNUMBER; 
+									expr->buffer =  " - " + $2->buffer;
+									$$ = expr;}
+	| L_ROUND  EXPRESSION R_ROUND  { expression* expr = getExpression();  expr = $2; expr->buffer = "("+expr->buffer+")"; $$ = expr;}
 ;
 
 VARIABLE_TYPE:  INTEGER_TYPE { $$ = INTNUMBER;}
 			  | DOUBLE_TYPE {$$ = DOUBLENUMBER;}
 ;
+INDEXING:   PIPE  EXPRESSION PIPE {
+				if($2->type != INTNUMBER){
+					printErr("Csakis egesz szammal lehet indexelni!");
+				}
+				$$ = $2;
+				}
+			| /* epsilon*/ {
+				expression* expr = getExpression(); 
+				expr->type = NOT_INDEXED;
+				$$ = expr;
+			}
+;
+VARIABLE: INDEXING VARIABLE_ID  {
+	ugysemegyVar* var = new ugysemegyVar;
+	*var=getVar(string($2));
+	
+	if ( (var->array && $1->type == NOT_INDEXED ) ||  (!var->array && $1->type != NOT_INDEXED)){
+		printErr("Helytelen indexeles!");
+	}
 
-VARIABLE_EVAL:	VARIABLE_ID { $$ = getVar($1);}
-			|	VARIABLE_ID TILDA VARIABLE_TYPE {
-												int typevar  = getVar($1); 
-												int tocast = $3; 
+	if($1->type != NOT_INDEXED){			
+		var->id = var->id+"["+$1->buffer+"]";				
+		if(getVar(string($2)).array){
+			var->array = false;
+		}
+	}	
+	vars.push_back(var);
+	$$ = var;	
+}
+;
+VARIABLE_EVAL:	VARIABLE { expression* expr = getExpression();  expr->type = $1->type; expr->buffer = $1->id;$$ =expr;} 
+			|   VARIABLE_TYPE TILDA VARIABLE  {
+												int typevar  = $3->type; 
+												int tocast = $1; 
 												if(typevar == INTNUMBER && tocast == DOUBLENUMBER) {
-													string errorMessage = "Dezső, elrontottad, nem lehet egeszt valosra castolni ";
-													yyerror(errorMessage.c_str());
+													printErr("Dezső, elrontottad, nem lehet egeszt valosra castolni ");													
 												}
 												cout<<"Dezső, most aztán megcsináltad, kasztoltál mint az indiaiak."<<endl;
+												expression* expr = getExpression(); 
+												expr->type = tocast;
+												if(tocast == INTNUMBER) {
+													expr->buffer= "(int)";
+												}
+												if(tocast == DOUBLENUMBER){
+													expr->buffer= "(double)";
+												}
+												expr->buffer+="("+$3->id+")";
+												$$ = expr;
 												}
 ;
 
@@ -168,31 +274,105 @@ ACCESS_MODIFIER:  GLOBAL_MODIFIER
 				| /* epsilon */
 ;			
 
-DECLARATION:  ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID L_ANGLE VARIABLE_TYPE	 
+DECLARATION:  ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID DOUBLECOMMA VARIABLE_TYPE	 
 				{
-					if(symbolTable.back().find(string($3)) == symbolTable.back().end()){
-						symbolTable.back().insert({string($3),$5});
+					if(symbolTable.back().find(string($3)) == symbolTable.back().end()){												
+						ugysemegyVar var;
+						var.type = $5;
+						var.array = false;
+						var.id = string($3);
+						symbolTable.back().insert({string($3),var});
+						if($5 == INTNUMBER){
+							declareInt(string($3));
+						}else{
+							declareDouble(string($3));
+						}
 					}else{
-						string errorMessage = "Dezső, elrontottad, már deklaráltál egy ilyen változót: "+string($3);
-						yyerror(errorMessage.c_str());
+						printErr("Dezső, elrontottad, már deklaráltál egy ilyen változót: "+string($3));						
 					}
 				}
-			| ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID PIPE VARIABLE_TYPE			
+			| ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID DOUBLECOMMA VARIABLE_TYPE DOUBLECOMMA  EXPRESSION
+			  {
+				  			if($7->type != INTNUMBER){
+										printErr("Tomb merete egesz kell legyen!");
+							}						
+							if(symbolTable.back().find(string($3)) == symbolTable.back().end()){									
+									ugysemegyVar var;						
+									var.type = $5;
+									var.array = true;
+									var.id = string($3);
+									symbolTable.back().insert({string($3),var});
+
+									if($5 == INTNUMBER){
+										declareIntArray(string($3),$7->buffer);
+									}else{
+										declareDoubleArray(string($3),$7->buffer);
+									}												
+								}else{
+									printErr("Dezső, elrontottad, már deklaráltál egy ilyen változót: "+string($3));
+								}
+			  } 							
 ;
 
-
-VARIABLE_ASSIGNMENT: VARIABLE_ID ASSIGNMENT EXPRESSION { 
-	if(getVar($1) == INTNUMBER && $3 == DOUBLENUMBER){
-		string errorMessage = "Dezső, nem lehet ilyen erteket adni";
-						yyerror(errorMessage.c_str());
-	}	
+VARIABLE_SWAP: VARIABLE L_ANGLE MINUS R_ANGLE VARIABLE {
+	if($1->type != $5->type ||  $1->array != $5->array){
+		printErr("Csere azonos tipusu valtozok kozott tortenhet");
 	}
+	string type = $1->type == INTNUMBER ? "int":"double";
+	swap($1->id,$5->id,type,$1->array);
+}
 ;
 
-READ_VARIABLE: READ VARIABLE_ID
+VARIABLE_ASSIGNMENT:VARIABLE 					
+					ASSIGNMENT EXPRESSION { 
+										if($1->type == INTNUMBER && $3->type == DOUBLENUMBER){
+											printErr("Dezső, nem lehet ilyen erteket adni");	
+										}	
+										writeAssignment($1->id,$3->buffer);																												  
+					}
 ;
 
-PRINT_VARIABLE: PRINT VARIABLE_ID
+READ_VARIABLE: READ VARIABLE_ID {
+					ugysemegyVar* var = &getVar(string($2)); 
+					if(var->array){
+						printErr("Kerlek mondd meg hany elemet szeretnel olvasni !");
+					}
+					readVar(string($2));
+				}
+				| READ VARIABLE_ID DOUBLECOMMA EXPRESSION {
+					if($4->type !=INTNUMBER ){
+						printErr("Csak egesz szamokkal lehet indexelni!");
+					}
+					ugysemegyVar* var = &getVar(string($2)); 
+					if(!var->array){
+						printErr(var->id+" nem tomb tipusu");
+					}
+					readArray(var->id,$4->buffer);
+				}
+;
+
+PRINT_VARIABLE: PRINT VARIABLE_ID DOUBLECOMMA EXPRESSION MINUS R_ANGLE EXPRESSION {
+								ugysemegyVar* var = &getVar(string($2)); 
+								if( !var->array ) {
+									printErr(var->id+" nem tomb tipusu");
+								}
+						rangePrint(var->id,$4->buffer,$7->buffer);
+				}
+				|PRINT VARIABLE_ID DOUBLECOMMA EXPRESSION ASSIGNMENT R_ANGLE EXPRESSION {
+								ugysemegyVar* var = &getVar(string($2)); 
+								if( !var->array ) {
+									printErr(var->id+" nem tomb tipusu");
+								}
+						rangePrintEq(var->id,$4->buffer,$7->buffer);
+				}
+				| PRINT VARIABLE_ID {
+								ugysemegyVar* var = &getVar(string($2)); 
+								if( var->array ) {
+									printAll(var->id);
+								}else{
+									printVar(var->id);
+								}								
+				}
 ;
 
 %%
@@ -205,3 +385,4 @@ int yyerror(const char* s) {
 	cout << "Line: " <<poz[0]<<" Col: "<<poz[1]<<" Len: "<<poz[2] << endl;
 	cout<< s<<endl;
 }
+

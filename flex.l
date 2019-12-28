@@ -238,7 +238,7 @@ ID    [a-zA-Z][a-zA-Z0-9]*
   poz[1] += yyleng;
   poz[2] = yyleng;
 
-  yylval.ival = atoi(yytext);
+  yylval.str = strdup(yytext);
   return INTNUMBER;
 }
 
@@ -247,7 +247,7 @@ ID    [a-zA-Z][a-zA-Z0-9]*
   poz[2] = yyleng;
 
   // yylval.fval = atof(yytext);  
-  yylval.dval = strtod(yytext,NULL);
+  yylval.str = strdup(yytext);
   return DOUBLENUMBER;
 }
 

@@ -1111,7 +1111,7 @@ YY_RULE_SETUP
   poz[1] += yyleng;
   poz[2] = yyleng;
 
-  yylval.ival = atoi(yytext);
+  yylval.str = strdup(yytext);
   return INTNUMBER;
 }
 	YY_BREAK
@@ -1123,7 +1123,7 @@ YY_RULE_SETUP
   poz[2] = yyleng;
 
   // yylval.fval = atof(yytext);  
-  yylval.dval = strtod(yytext,NULL);
+  yylval.str = strdup(yytext);
   return DOUBLENUMBER;
 }
 	YY_BREAK

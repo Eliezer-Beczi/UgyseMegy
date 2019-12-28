@@ -78,7 +78,8 @@ extern int yydebug;
     GLOBAL_MODIFIER = 288,
     PIPE = 289,
     DOUBLECOMMA = 290,
-    TILDA = 291
+    TILDA = 291,
+    NOT_INDEXED = 292
   };
 #endif
 
@@ -87,14 +88,17 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 26 "bison.y" /* yacc.c:1909  */
+#line 60 "bison.y" /* yacc.c:1909  */
 
   int ival;
   float fval;
   double dval;
-  char* str;
+  char* str;    
+  struct ugysemegyVar* uVar;
+  bool boolean;
+  struct expression* expr;
 
-#line 98 "bison.tab.h" /* yacc.c:1909  */
+#line 102 "bison.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

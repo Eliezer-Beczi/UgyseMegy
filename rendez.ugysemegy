@@ -1,0 +1,24 @@
+: n : egeszke;
+beolvas n;
+:  tomb : pottyos : n ;
+
+beolvas tomb:n;
+
+:i:egeszke;
+i = 0;
+
+fesztegyet [ i < n - 1 ]
+<
+    : j : egeszke;
+    j=i+1;
+    fesztegyet [ j < n ]
+    <
+        vajon[ |j|tomb < |i|tomb  ]
+        <
+            |j|tomb <-> |i|tomb;        
+        >
+        j=j+1;
+    >
+    i=i+1;
+>
+kiir tomb:1=>n/2;
