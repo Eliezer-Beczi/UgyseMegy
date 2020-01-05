@@ -214,6 +214,24 @@ EXPRESSION: VARIABLE_EVAL {  $$ = $1;}
 									expr->buffer =  " - " + $2->buffer;
 									$$ = expr;}
 	| L_ROUND  EXPRESSION R_ROUND  { expression* expr = getExpression();  expr = $2; expr->buffer = "("+expr->buffer+")"; $$ = expr;}
+	|   VARIABLE_TYPE TILDA L_ROUND  EXPRESSION R_ROUND  {
+												int typevar  = $4->type; 
+												int tocast = $1; 
+												if(typevar == INTNUMBER && tocast == DOUBLENUMBER) {
+													printErr("Dezső, elrontottad, nem lehet egeszt valosra castolni ");													
+												}
+												cout<<"Dezső, most aztán megcsináltad, kasztoltál mint az indiaiak."<<endl;
+												expression* expr = getExpression(); 
+												expr->type = tocast;
+												if(tocast == INTNUMBER) {
+													expr->buffer= "(int)";
+												}
+												if(tocast == DOUBLENUMBER){
+													expr->buffer= "(double)";
+												}
+												expr->buffer+="("+$4->buffer+")";
+												$$ = expr;
+												}
 ;
 
 VARIABLE_TYPE:  INTEGER_TYPE { $$ = INTNUMBER;}
@@ -249,25 +267,7 @@ VARIABLE: INDEXING VARIABLE_ID  {
 	$$ = var;	
 }
 ;
-VARIABLE_EVAL:	VARIABLE { expression* expr = getExpression();  expr->type = $1->type; expr->buffer = $1->id;$$ =expr;} 
-			|   VARIABLE_TYPE TILDA VARIABLE  {
-												int typevar  = $3->type; 
-												int tocast = $1; 
-												if(typevar == INTNUMBER && tocast == DOUBLENUMBER) {
-													printErr("Dezső, elrontottad, nem lehet egeszt valosra castolni ");													
-												}
-												cout<<"Dezső, most aztán megcsináltad, kasztoltál mint az indiaiak."<<endl;
-												expression* expr = getExpression(); 
-												expr->type = tocast;
-												if(tocast == INTNUMBER) {
-													expr->buffer= "(int)";
-												}
-												if(tocast == DOUBLENUMBER){
-													expr->buffer= "(double)";
-												}
-												expr->buffer+="("+$3->id+")";
-												$$ = expr;
-												}
+VARIABLE_EVAL:	VARIABLE { expression* expr = getExpression();  expr->type = $1->type; expr->buffer = $1->id;$$ =expr;} 			
 ;
 
 ACCESS_MODIFIER:  GLOBAL_MODIFIER
@@ -291,7 +291,7 @@ DECLARATION:  ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID DOUBLECOMMA VARIABLE_TYPE
 						printErr("Dezső, elrontottad, már deklaráltál egy ilyen változót: "+string($3));						
 					}
 				}
-			| ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID DOUBLECOMMA VARIABLE_TYPE DOUBLECOMMA  EXPRESSION
+			| ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID DOUBLECOMMA VARIABLE_TYPE DOUBLECOMMA  EXPRESSION 
 			  {
 				  			if($7->type != INTNUMBER){
 										printErr("Tomb merete egesz kell legyen!");
@@ -307,6 +307,27 @@ DECLARATION:  ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID DOUBLECOMMA VARIABLE_TYPE
 										declareIntArray(string($3),$7->buffer);
 									}else{
 										declareDoubleArray(string($3),$7->buffer);
+									}												
+								}else{
+									printErr("Dezső, elrontottad, már deklaráltál egy ilyen változót: "+string($3));
+								}
+			  } 		
+			| ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID DOUBLECOMMA VARIABLE_TYPE DOUBLECOMMA  EXPRESSION  DOUBLECOMMA  EXPRESSION
+			  {
+				  			if($7->type != INTNUMBER){
+										printErr("Tomb merete egesz kell legyen!");
+							}						
+							if(symbolTable.back().find(string($3)) == symbolTable.back().end()){									
+									ugysemegyVar var;						
+									var.type = $5;
+									var.array = true;
+									var.id = string($3);
+									symbolTable.back().insert({string($3),var});
+
+									if($5 == INTNUMBER){
+										declareIntArrayWithDefValue(string($3),$7->buffer,$9->buffer);
+									}else{
+										declareDoubleArrayWithDefValue(string($3),$7->buffer,$9->buffer);
 									}												
 								}else{
 									printErr("Dezső, elrontottad, már deklaráltál egy ilyen változót: "+string($3));
@@ -365,13 +386,8 @@ PRINT_VARIABLE: PRINT VARIABLE_ID DOUBLECOMMA EXPRESSION MINUS R_ANGLE EXPRESSIO
 								}
 						rangePrintEq(var->id,$4->buffer,$7->buffer);
 				}
-				| PRINT VARIABLE_ID {
-								ugysemegyVar* var = &getVar(string($2)); 
-								if( var->array ) {
-									printAll(var->id);
-								}else{
-									printVar(var->id);
-								}								
+				| PRINT DOUBLECOMMA EXPRESSION {
+								printExpression($3->buffer);
 				}
 ;
 

@@ -1,0 +1,19 @@
+: n : egeszke;
+beolvas n;
+
+:i:egeszke;
+i = 2;
+:prim:egeszke;
+prim=1;
+
+fesztegyet [ i*i < n+1 es prim == 1 ]
+<    
+        vajon[ (n/i)*i == n]
+        <
+            prim=0;
+            kiir:i;
+        >        
+    i=i+1;
+>
+kiir :prim;
+

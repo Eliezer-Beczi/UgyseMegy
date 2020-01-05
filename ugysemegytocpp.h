@@ -127,14 +127,27 @@ void declareDoubleArray(std::string id, std::string sizeExpression)
 {
     output << getIndentation(indentation) << "std::vector<double> " + id + "( " + sizeExpression + " )";
 }
+
+void declareIntArrayWithDefValue(std::string id, std::string sizeExpression,std::string valueexpression)
+{
+    output << getIndentation(indentation) << "std::vector<int> " + id + "( " + sizeExpression + ","+valueexpression+" )";
+}
+
+void declareDoubleArrayWithDefValue(std::string id, std::string sizeExpression,std::string valueexpression)
+{
+    output << getIndentation(indentation) << "std::vector<double> " + id + "( " + sizeExpression + ","+valueexpression+ " )";
+}
+
 void writeAssignment(std::string id, std::string valueExpression)
 {
     output << getIndentation(indentation) << id + " = " + valueExpression;
 }
+
 void writeExpression(std::string expression)
 {
     output << expression;
 }
+
 void swap(std::string id1, std::string id2, std::string type, bool array)
 {
     if (array)
@@ -170,12 +183,17 @@ void rangePrintEq(std::string id, std::string startExpression, std::string endEx
 
 void printAll(std::string id)
 {
-    output << getIndentation(indentation) << "for(int i=0; i<"  <<id<< ".size();++i){ std::cout<<" << id << "[ i ]<<std::endl;}";
+    output << getIndentation(indentation) << "for(int i=0; i<" << id << ".size();++i){ std::cout<<" << id << "[ i ]<<std::endl;}";
 }
 
 void printVar(std::string id)
 {
     output << getIndentation(indentation) << "std::cout<<" << id << "<<std::endl;";
+}
+
+void printExpression(std::string expression)
+{
+    output << getIndentation(indentation) << "std::cout<<" << expression << "<<std::endl;";
 }
 
 #endif

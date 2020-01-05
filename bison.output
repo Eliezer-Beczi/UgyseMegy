@@ -87,34 +87,35 @@ Grammar
    51           | PLUS EXPRESSION
    52           | MINUS EXPRESSION
    53           | L_ROUND EXPRESSION R_ROUND
+   54           | VARIABLE_TYPE TILDA L_ROUND EXPRESSION R_ROUND
 
-   54 VARIABLE_TYPE: INTEGER_TYPE
-   55              | DOUBLE_TYPE
+   55 VARIABLE_TYPE: INTEGER_TYPE
+   56              | DOUBLE_TYPE
 
-   56 INDEXING: PIPE EXPRESSION PIPE
-   57         | %empty
+   57 INDEXING: PIPE EXPRESSION PIPE
+   58         | %empty
 
-   58 VARIABLE: INDEXING VARIABLE_ID
+   59 VARIABLE: INDEXING VARIABLE_ID
 
-   59 VARIABLE_EVAL: VARIABLE
-   60              | VARIABLE_TYPE TILDA VARIABLE
+   60 VARIABLE_EVAL: VARIABLE
 
    61 ACCESS_MODIFIER: GLOBAL_MODIFIER
    62                | %empty
 
    63 DECLARATION: ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID DOUBLECOMMA VARIABLE_TYPE
    64            | ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID DOUBLECOMMA VARIABLE_TYPE DOUBLECOMMA EXPRESSION
+   65            | ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID DOUBLECOMMA VARIABLE_TYPE DOUBLECOMMA EXPRESSION DOUBLECOMMA EXPRESSION
 
-   65 VARIABLE_SWAP: VARIABLE L_ANGLE MINUS R_ANGLE VARIABLE
+   66 VARIABLE_SWAP: VARIABLE L_ANGLE MINUS R_ANGLE VARIABLE
 
-   66 VARIABLE_ASSIGNMENT: VARIABLE ASSIGNMENT EXPRESSION
+   67 VARIABLE_ASSIGNMENT: VARIABLE ASSIGNMENT EXPRESSION
 
-   67 READ_VARIABLE: READ VARIABLE_ID
-   68              | READ VARIABLE_ID DOUBLECOMMA EXPRESSION
+   68 READ_VARIABLE: READ VARIABLE_ID
+   69              | READ VARIABLE_ID DOUBLECOMMA EXPRESSION
 
-   69 PRINT_VARIABLE: PRINT VARIABLE_ID DOUBLECOMMA EXPRESSION MINUS R_ANGLE EXPRESSION
-   70               | PRINT VARIABLE_ID DOUBLECOMMA EXPRESSION ASSIGNMENT R_ANGLE EXPRESSION
-   71               | PRINT VARIABLE_ID
+   70 PRINT_VARIABLE: PRINT VARIABLE_ID DOUBLECOMMA EXPRESSION MINUS R_ANGLE EXPRESSION
+   71               | PRINT VARIABLE_ID DOUBLECOMMA EXPRESSION ASSIGNMENT R_ANGLE EXPRESSION
+   72               | PRINT DOUBLECOMMA EXPRESSION
 
 
 Terminals, with rules where they appear
@@ -125,36 +126,36 @@ INTNUMBER (258) 45
 DOUBLENUMBER (259) 46
 STR (260)
 PLUS (261) 47 51
-MINUS (262) 48 52 65 69
+MINUS (262) 48 52 66 70
 MULTIPLY (263) 49
 DIVIDE (264) 50
-ASSIGNMENT (265) 66 70
+ASSIGNMENT (265) 67 71
 L_BOX (266) 19 30
 R_BOX (267) 22 30
-L_ROUND (268) 41 42 53
-R_ROUND (269) 41 42 53
+L_ROUND (268) 41 42 53 54
+R_ROUND (269) 41 42 53 54
 L_CURLY (270)
 R_CURLY (271)
-L_ANGLE (272) 21 26 30 33 65
-R_ANGLE (273) 23 26 30 34 65 69 70
+L_ANGLE (272) 21 26 30 33 66
+R_ANGLE (273) 23 26 30 34 66 70 71
 EQUAL (274) 31
 NOT_EQUAL (275) 32
 AND (276) 40
 OR (277) 39
 NOT (278) 42
 END (279) 4 5
-READ (280) 67 68
-PRINT (281) 69 70 71
+READ (280) 68 69
+PRINT (281) 70 71 72
 IF (282) 19
 ELSE (283)
 WHILE (284) 30
-INTEGER_TYPE (285) 54
-DOUBLE_TYPE (286) 55
-VARIABLE_ID (287) 58 63 64 67 68 69 70 71
+INTEGER_TYPE (285) 55
+DOUBLE_TYPE (286) 56
+VARIABLE_ID (287) 59 63 64 65 68 69 70 71
 GLOBAL_MODIFIER (288) 61
-PIPE (289) 56
-DOUBLECOMMA (290) 63 64 68 69 70
-TILDA (291) 60
+PIPE (289) 57
+DOUBLECOMMA (290) 63 64 65 69 70 71 72
+TILDA (291) 54
 NOT_INDEXED (292)
 
 
@@ -207,28 +208,28 @@ BIGGER (59)
 BOOLEXPRESSION (60)
     on left: 35 36 37 38 39 40 41 42 43, on right: 22 30 39 40 41 42
 EXPRESSION (61)
-    on left: 44 45 46 47 48 49 50 51 52 53, on right: 11 31 32 33 34
-    47 48 49 50 51 52 53 56 64 66 68 69 70
+    on left: 44 45 46 47 48 49 50 51 52 53 54, on right: 11 31 32 33
+    34 47 48 49 50 51 52 53 54 57 64 65 67 69 70 71 72
 VARIABLE_TYPE (62)
-    on left: 54 55, on right: 60 63 64
+    on left: 55 56, on right: 54 63 64 65
 INDEXING (63)
-    on left: 56 57, on right: 58
+    on left: 57 58, on right: 59
 VARIABLE (64)
-    on left: 58, on right: 59 60 65 66
+    on left: 59, on right: 60 66 67
 VARIABLE_EVAL (65)
-    on left: 59 60, on right: 44
+    on left: 60, on right: 44
 ACCESS_MODIFIER (66)
-    on left: 61 62, on right: 63 64
+    on left: 61 62, on right: 63 64 65
 DECLARATION (67)
-    on left: 63 64, on right: 12
+    on left: 63 64 65, on right: 12
 VARIABLE_SWAP (68)
-    on left: 65, on right: 16
+    on left: 66, on right: 16
 VARIABLE_ASSIGNMENT (69)
-    on left: 66, on right: 13
+    on left: 67, on right: 13
 READ_VARIABLE (70)
-    on left: 67 68, on right: 14
+    on left: 68 69, on right: 14
 PRINT_VARIABLE (71)
-    on left: 69 70 71, on right: 15
+    on left: 70 71 72, on right: 15
 
 
 State 0
@@ -268,7 +269,7 @@ State 2
     GLOBAL_MODIFIER  shift, and go to state 16
     PIPE             shift, and go to state 17
 
-    VARIABLE_ID  reduce using rule 57 (INDEXING)
+    VARIABLE_ID  reduce using rule 58 (INDEXING)
     DOUBLECOMMA  reduce using rule 62 (ACCESS_MODIFIER)
 
     PROG                 go to state 18
@@ -330,7 +331,7 @@ State 7
     DOUBLE_TYPE   shift, and go to state 15
     PIPE          shift, and go to state 17
 
-    $default  reduce using rule 57 (INDEXING)
+    $default  reduce using rule 58 (INDEXING)
 
     EXPRESSION     go to state 34
     VARIABLE_TYPE  go to state 24
@@ -352,7 +353,7 @@ State 8
     DOUBLE_TYPE   shift, and go to state 15
     PIPE          shift, and go to state 17
 
-    $default  reduce using rule 57 (INDEXING)
+    $default  reduce using rule 58 (INDEXING)
 
     EXPRESSION     go to state 36
     VARIABLE_TYPE  go to state 24
@@ -374,7 +375,7 @@ State 9
     DOUBLE_TYPE   shift, and go to state 15
     PIPE          shift, and go to state 17
 
-    $default  reduce using rule 57 (INDEXING)
+    $default  reduce using rule 58 (INDEXING)
 
     EXPRESSION     go to state 37
     VARIABLE_TYPE  go to state 24
@@ -385,26 +386,27 @@ State 9
 
 State 10
 
-   67 READ_VARIABLE: READ . VARIABLE_ID
-   68              | READ . VARIABLE_ID DOUBLECOMMA EXPRESSION
+   68 READ_VARIABLE: READ . VARIABLE_ID
+   69              | READ . VARIABLE_ID DOUBLECOMMA EXPRESSION
 
     VARIABLE_ID  shift, and go to state 38
 
 
 State 11
 
-   69 PRINT_VARIABLE: PRINT . VARIABLE_ID DOUBLECOMMA EXPRESSION MINUS R_ANGLE EXPRESSION
-   70               | PRINT . VARIABLE_ID DOUBLECOMMA EXPRESSION ASSIGNMENT R_ANGLE EXPRESSION
-   71               | PRINT . VARIABLE_ID
+   70 PRINT_VARIABLE: PRINT . VARIABLE_ID DOUBLECOMMA EXPRESSION MINUS R_ANGLE EXPRESSION
+   71               | PRINT . VARIABLE_ID DOUBLECOMMA EXPRESSION ASSIGNMENT R_ANGLE EXPRESSION
+   72               | PRINT . DOUBLECOMMA EXPRESSION
 
     VARIABLE_ID  shift, and go to state 39
+    DOUBLECOMMA  shift, and go to state 40
 
 
 State 12
 
    19 openIf: IF . L_BOX
 
-    L_BOX  shift, and go to state 40
+    L_BOX  shift, and go to state 41
 
 
 State 13
@@ -413,21 +415,21 @@ State 13
 
     $default  reduce using rule 27 ($@5)
 
-    $@5  go to state 41
+    $@5  go to state 42
 
 
 State 14
 
-   54 VARIABLE_TYPE: INTEGER_TYPE .
+   55 VARIABLE_TYPE: INTEGER_TYPE .
 
-    $default  reduce using rule 54 (VARIABLE_TYPE)
+    $default  reduce using rule 55 (VARIABLE_TYPE)
 
 
 State 15
 
-   55 VARIABLE_TYPE: DOUBLE_TYPE .
+   56 VARIABLE_TYPE: DOUBLE_TYPE .
 
-    $default  reduce using rule 55 (VARIABLE_TYPE)
+    $default  reduce using rule 56 (VARIABLE_TYPE)
 
 
 State 16
@@ -439,7 +441,7 @@ State 16
 
 State 17
 
-   56 INDEXING: PIPE . EXPRESSION PIPE
+   57 INDEXING: PIPE . EXPRESSION PIPE
 
     INTNUMBER     shift, and go to state 5
     DOUBLENUMBER  shift, and go to state 6
@@ -450,9 +452,9 @@ State 17
     DOUBLE_TYPE   shift, and go to state 15
     PIPE          shift, and go to state 17
 
-    $default  reduce using rule 57 (INDEXING)
+    $default  reduce using rule 58 (INDEXING)
 
-    EXPRESSION     go to state 42
+    EXPRESSION     go to state 43
     VARIABLE_TYPE  go to state 24
     INDEXING       go to state 25
     VARIABLE       go to state 35
@@ -480,14 +482,14 @@ State 18
     GLOBAL_MODIFIER  shift, and go to state 16
     PIPE             shift, and go to state 17
 
-    VARIABLE_ID  reduce using rule 57 (INDEXING)
+    VARIABLE_ID  reduce using rule 58 (INDEXING)
     DOUBLECOMMA  reduce using rule 62 (ACCESS_MODIFIER)
     $default     reduce using rule 2 (START)
 
-    COMMAND              go to state 43
+    COMMAND              go to state 44
     openIf               go to state 20
-    IFBLOCK              go to state 44
-    WHILEBLOCK           go to state 45
+    IFBLOCK              go to state 45
+    WHILEBLOCK           go to state 46
     EXPRESSION           go to state 23
     VARIABLE_TYPE        go to state 24
     INDEXING             go to state 25
@@ -505,7 +507,7 @@ State 19
 
     4 PROG: COMMAND . END
 
-    END  shift, and go to state 46
+    END  shift, and go to state 47
 
 
 State 20
@@ -513,26 +515,26 @@ State 20
    23 IFBLOCK: openIf . captureExpression push continueIf R_ANGLE pop
    26        | openIf . captureExpression push continueIf L_ANGLE pop push R_ANGLE $@3 PROG $@4 R_ANGLE pop
 
-    error         shift, and go to state 47
+    error         shift, and go to state 48
     INTNUMBER     shift, and go to state 5
     DOUBLENUMBER  shift, and go to state 6
     PLUS          shift, and go to state 7
     MINUS         shift, and go to state 8
-    L_ROUND       shift, and go to state 48
-    NOT           shift, and go to state 49
+    L_ROUND       shift, and go to state 49
+    NOT           shift, and go to state 50
     INTEGER_TYPE  shift, and go to state 14
     DOUBLE_TYPE   shift, and go to state 15
     PIPE          shift, and go to state 17
 
-    VARIABLE_ID  reduce using rule 57 (INDEXING)
+    VARIABLE_ID  reduce using rule 58 (INDEXING)
 
-    captureExpression  go to state 50
-    EQUALITY           go to state 51
-    NOTEQUALITY        go to state 52
-    SMALLER            go to state 53
-    BIGGER             go to state 54
-    BOOLEXPRESSION     go to state 55
-    EXPRESSION         go to state 56
+    captureExpression  go to state 51
+    EQUALITY           go to state 52
+    NOTEQUALITY        go to state 53
+    SMALLER            go to state 54
+    BIGGER             go to state 55
+    BOOLEXPRESSION     go to state 56
+    EXPRESSION         go to state 57
     VARIABLE_TYPE      go to state 24
     INDEXING           go to state 25
     VARIABLE           go to state 35
@@ -561,38 +563,38 @@ State 23
    49           | EXPRESSION . MULTIPLY EXPRESSION
    50           | EXPRESSION . DIVIDE EXPRESSION
 
-    PLUS      shift, and go to state 57
-    MINUS     shift, and go to state 58
-    MULTIPLY  shift, and go to state 59
-    DIVIDE    shift, and go to state 60
+    PLUS      shift, and go to state 58
+    MINUS     shift, and go to state 59
+    MULTIPLY  shift, and go to state 60
+    DIVIDE    shift, and go to state 61
 
     $default  reduce using rule 11 (COMMAND)
 
 
 State 24
 
-   60 VARIABLE_EVAL: VARIABLE_TYPE . TILDA VARIABLE
+   54 EXPRESSION: VARIABLE_TYPE . TILDA L_ROUND EXPRESSION R_ROUND
 
-    TILDA  shift, and go to state 61
+    TILDA  shift, and go to state 62
 
 
 State 25
 
-   58 VARIABLE: INDEXING . VARIABLE_ID
+   59 VARIABLE: INDEXING . VARIABLE_ID
 
-    VARIABLE_ID  shift, and go to state 62
+    VARIABLE_ID  shift, and go to state 63
 
 
 State 26
 
-   59 VARIABLE_EVAL: VARIABLE .
-   65 VARIABLE_SWAP: VARIABLE . L_ANGLE MINUS R_ANGLE VARIABLE
-   66 VARIABLE_ASSIGNMENT: VARIABLE . ASSIGNMENT EXPRESSION
+   60 VARIABLE_EVAL: VARIABLE .
+   66 VARIABLE_SWAP: VARIABLE . L_ANGLE MINUS R_ANGLE VARIABLE
+   67 VARIABLE_ASSIGNMENT: VARIABLE . ASSIGNMENT EXPRESSION
 
-    ASSIGNMENT  shift, and go to state 63
-    L_ANGLE     shift, and go to state 64
+    ASSIGNMENT  shift, and go to state 64
+    L_ANGLE     shift, and go to state 65
 
-    $default  reduce using rule 59 (VARIABLE_EVAL)
+    $default  reduce using rule 60 (VARIABLE_EVAL)
 
 
 State 27
@@ -606,8 +608,9 @@ State 28
 
    63 DECLARATION: ACCESS_MODIFIER . DOUBLECOMMA VARIABLE_ID DOUBLECOMMA VARIABLE_TYPE
    64            | ACCESS_MODIFIER . DOUBLECOMMA VARIABLE_ID DOUBLECOMMA VARIABLE_TYPE DOUBLECOMMA EXPRESSION
+   65            | ACCESS_MODIFIER . DOUBLECOMMA VARIABLE_ID DOUBLECOMMA VARIABLE_TYPE DOUBLECOMMA EXPRESSION DOUBLECOMMA EXPRESSION
 
-    DOUBLECOMMA  shift, and go to state 65
+    DOUBLECOMMA  shift, and go to state 66
 
 
 State 29
@@ -653,17 +656,17 @@ State 34
    50           | EXPRESSION . DIVIDE EXPRESSION
    51           | PLUS EXPRESSION .
 
-    MULTIPLY  shift, and go to state 59
-    DIVIDE    shift, and go to state 60
+    MULTIPLY  shift, and go to state 60
+    DIVIDE    shift, and go to state 61
 
     $default  reduce using rule 51 (EXPRESSION)
 
 
 State 35
 
-   59 VARIABLE_EVAL: VARIABLE .
+   60 VARIABLE_EVAL: VARIABLE .
 
-    $default  reduce using rule 59 (VARIABLE_EVAL)
+    $default  reduce using rule 60 (VARIABLE_EVAL)
 
 
 State 36
@@ -674,8 +677,8 @@ State 36
    50           | EXPRESSION . DIVIDE EXPRESSION
    52           | MINUS EXPRESSION .
 
-    MULTIPLY  shift, and go to state 59
-    DIVIDE    shift, and go to state 60
+    MULTIPLY  shift, and go to state 60
+    DIVIDE    shift, and go to state 61
 
     $default  reduce using rule 52 (EXPRESSION)
 
@@ -688,185 +691,204 @@ State 37
    50           | EXPRESSION . DIVIDE EXPRESSION
    53           | L_ROUND EXPRESSION . R_ROUND
 
-    PLUS      shift, and go to state 57
-    MINUS     shift, and go to state 58
-    MULTIPLY  shift, and go to state 59
-    DIVIDE    shift, and go to state 60
-    R_ROUND   shift, and go to state 66
+    PLUS      shift, and go to state 58
+    MINUS     shift, and go to state 59
+    MULTIPLY  shift, and go to state 60
+    DIVIDE    shift, and go to state 61
+    R_ROUND   shift, and go to state 67
 
 
 State 38
 
-   67 READ_VARIABLE: READ VARIABLE_ID .
-   68              | READ VARIABLE_ID . DOUBLECOMMA EXPRESSION
+   68 READ_VARIABLE: READ VARIABLE_ID .
+   69              | READ VARIABLE_ID . DOUBLECOMMA EXPRESSION
 
-    DOUBLECOMMA  shift, and go to state 67
+    DOUBLECOMMA  shift, and go to state 68
 
-    $default  reduce using rule 67 (READ_VARIABLE)
+    $default  reduce using rule 68 (READ_VARIABLE)
 
 
 State 39
 
-   69 PRINT_VARIABLE: PRINT VARIABLE_ID . DOUBLECOMMA EXPRESSION MINUS R_ANGLE EXPRESSION
-   70               | PRINT VARIABLE_ID . DOUBLECOMMA EXPRESSION ASSIGNMENT R_ANGLE EXPRESSION
-   71               | PRINT VARIABLE_ID .
+   70 PRINT_VARIABLE: PRINT VARIABLE_ID . DOUBLECOMMA EXPRESSION MINUS R_ANGLE EXPRESSION
+   71               | PRINT VARIABLE_ID . DOUBLECOMMA EXPRESSION ASSIGNMENT R_ANGLE EXPRESSION
 
-    DOUBLECOMMA  shift, and go to state 68
-
-    $default  reduce using rule 71 (PRINT_VARIABLE)
+    DOUBLECOMMA  shift, and go to state 69
 
 
 State 40
+
+   72 PRINT_VARIABLE: PRINT DOUBLECOMMA . EXPRESSION
+
+    INTNUMBER     shift, and go to state 5
+    DOUBLENUMBER  shift, and go to state 6
+    PLUS          shift, and go to state 7
+    MINUS         shift, and go to state 8
+    L_ROUND       shift, and go to state 9
+    INTEGER_TYPE  shift, and go to state 14
+    DOUBLE_TYPE   shift, and go to state 15
+    PIPE          shift, and go to state 17
+
+    $default  reduce using rule 58 (INDEXING)
+
+    EXPRESSION     go to state 70
+    VARIABLE_TYPE  go to state 24
+    INDEXING       go to state 25
+    VARIABLE       go to state 35
+    VARIABLE_EVAL  go to state 27
+
+
+State 41
 
    19 openIf: IF L_BOX .
 
     $default  reduce using rule 19 (openIf)
 
 
-State 41
+State 42
 
    30 WHILEBLOCK: WHILE $@5 . L_BOX BOOLEXPRESSION $@6 R_BOX $@7 L_ANGLE push PROG pop R_ANGLE
 
-    L_BOX  shift, and go to state 69
+    L_BOX  shift, and go to state 71
 
 
-State 42
+State 43
 
    47 EXPRESSION: EXPRESSION . PLUS EXPRESSION
    48           | EXPRESSION . MINUS EXPRESSION
    49           | EXPRESSION . MULTIPLY EXPRESSION
    50           | EXPRESSION . DIVIDE EXPRESSION
-   56 INDEXING: PIPE EXPRESSION . PIPE
+   57 INDEXING: PIPE EXPRESSION . PIPE
 
-    PLUS      shift, and go to state 57
-    MINUS     shift, and go to state 58
-    MULTIPLY  shift, and go to state 59
-    DIVIDE    shift, and go to state 60
-    PIPE      shift, and go to state 70
-
-
-State 43
-
-    5 PROG: PROG COMMAND . END
-
-    END  shift, and go to state 71
+    PLUS      shift, and go to state 58
+    MINUS     shift, and go to state 59
+    MULTIPLY  shift, and go to state 60
+    DIVIDE    shift, and go to state 61
+    PIPE      shift, and go to state 72
 
 
 State 44
+
+    5 PROG: PROG COMMAND . END
+
+    END  shift, and go to state 73
+
+
+State 45
 
     8 PROG: PROG IFBLOCK .
 
     $default  reduce using rule 8 (PROG)
 
 
-State 45
+State 46
 
     9 PROG: PROG WHILEBLOCK .
 
     $default  reduce using rule 9 (PROG)
 
 
-State 46
+State 47
 
     4 PROG: COMMAND END .
 
     $default  reduce using rule 4 (PROG)
 
 
-State 47
+State 48
 
    43 BOOLEXPRESSION: error .
 
     $default  reduce using rule 43 (BOOLEXPRESSION)
 
 
-State 48
+State 49
 
    41 BOOLEXPRESSION: L_ROUND . BOOLEXPRESSION R_ROUND
    53 EXPRESSION: L_ROUND . EXPRESSION R_ROUND
 
-    error         shift, and go to state 47
+    error         shift, and go to state 48
     INTNUMBER     shift, and go to state 5
     DOUBLENUMBER  shift, and go to state 6
     PLUS          shift, and go to state 7
     MINUS         shift, and go to state 8
-    L_ROUND       shift, and go to state 48
-    NOT           shift, and go to state 49
+    L_ROUND       shift, and go to state 49
+    NOT           shift, and go to state 50
     INTEGER_TYPE  shift, and go to state 14
     DOUBLE_TYPE   shift, and go to state 15
     PIPE          shift, and go to state 17
 
-    VARIABLE_ID  reduce using rule 57 (INDEXING)
+    VARIABLE_ID  reduce using rule 58 (INDEXING)
 
-    EQUALITY        go to state 51
-    NOTEQUALITY     go to state 52
-    SMALLER         go to state 53
-    BIGGER          go to state 54
-    BOOLEXPRESSION  go to state 72
-    EXPRESSION      go to state 73
+    EQUALITY        go to state 52
+    NOTEQUALITY     go to state 53
+    SMALLER         go to state 54
+    BIGGER          go to state 55
+    BOOLEXPRESSION  go to state 74
+    EXPRESSION      go to state 75
     VARIABLE_TYPE   go to state 24
     INDEXING        go to state 25
     VARIABLE        go to state 35
     VARIABLE_EVAL   go to state 27
 
 
-State 49
+State 50
 
    42 BOOLEXPRESSION: NOT . L_ROUND BOOLEXPRESSION R_ROUND
 
-    L_ROUND  shift, and go to state 74
+    L_ROUND  shift, and go to state 76
 
 
-State 50
+State 51
 
    23 IFBLOCK: openIf captureExpression . push continueIf R_ANGLE pop
    26        | openIf captureExpression . push continueIf L_ANGLE pop push R_ANGLE $@3 PROG $@4 R_ANGLE pop
 
     $default  reduce using rule 17 (push)
 
-    push  go to state 75
+    push  go to state 77
 
 
-State 51
+State 52
 
    35 BOOLEXPRESSION: EQUALITY .
 
     $default  reduce using rule 35 (BOOLEXPRESSION)
 
 
-State 52
+State 53
 
    36 BOOLEXPRESSION: NOTEQUALITY .
 
     $default  reduce using rule 36 (BOOLEXPRESSION)
 
 
-State 53
+State 54
 
    37 BOOLEXPRESSION: SMALLER .
 
     $default  reduce using rule 37 (BOOLEXPRESSION)
 
 
-State 54
+State 55
 
    38 BOOLEXPRESSION: BIGGER .
 
     $default  reduce using rule 38 (BOOLEXPRESSION)
 
 
-State 55
+State 56
 
    22 captureExpression: BOOLEXPRESSION . R_BOX
    39 BOOLEXPRESSION: BOOLEXPRESSION . OR BOOLEXPRESSION
    40               | BOOLEXPRESSION . AND BOOLEXPRESSION
 
-    R_BOX  shift, and go to state 76
-    AND    shift, and go to state 77
-    OR     shift, and go to state 78
+    R_BOX  shift, and go to state 78
+    AND    shift, and go to state 79
+    OR     shift, and go to state 80
 
 
-State 56
+State 57
 
    31 EQUALITY: EXPRESSION . EQUAL EXPRESSION
    32 NOTEQUALITY: EXPRESSION . NOT_EQUAL EXPRESSION
@@ -877,17 +899,17 @@ State 56
    49           | EXPRESSION . MULTIPLY EXPRESSION
    50           | EXPRESSION . DIVIDE EXPRESSION
 
-    PLUS       shift, and go to state 57
-    MINUS      shift, and go to state 58
-    MULTIPLY   shift, and go to state 59
-    DIVIDE     shift, and go to state 60
-    L_ANGLE    shift, and go to state 79
-    R_ANGLE    shift, and go to state 80
-    EQUAL      shift, and go to state 81
-    NOT_EQUAL  shift, and go to state 82
+    PLUS       shift, and go to state 58
+    MINUS      shift, and go to state 59
+    MULTIPLY   shift, and go to state 60
+    DIVIDE     shift, and go to state 61
+    L_ANGLE    shift, and go to state 81
+    R_ANGLE    shift, and go to state 82
+    EQUAL      shift, and go to state 83
+    NOT_EQUAL  shift, and go to state 84
 
 
-State 57
+State 58
 
    47 EXPRESSION: EXPRESSION PLUS . EXPRESSION
 
@@ -900,16 +922,16 @@ State 57
     DOUBLE_TYPE   shift, and go to state 15
     PIPE          shift, and go to state 17
 
-    $default  reduce using rule 57 (INDEXING)
+    $default  reduce using rule 58 (INDEXING)
 
-    EXPRESSION     go to state 83
+    EXPRESSION     go to state 85
     VARIABLE_TYPE  go to state 24
     INDEXING       go to state 25
     VARIABLE       go to state 35
     VARIABLE_EVAL  go to state 27
 
 
-State 58
+State 59
 
    48 EXPRESSION: EXPRESSION MINUS . EXPRESSION
 
@@ -922,16 +944,16 @@ State 58
     DOUBLE_TYPE   shift, and go to state 15
     PIPE          shift, and go to state 17
 
-    $default  reduce using rule 57 (INDEXING)
+    $default  reduce using rule 58 (INDEXING)
 
-    EXPRESSION     go to state 84
+    EXPRESSION     go to state 86
     VARIABLE_TYPE  go to state 24
     INDEXING       go to state 25
     VARIABLE       go to state 35
     VARIABLE_EVAL  go to state 27
 
 
-State 59
+State 60
 
    49 EXPRESSION: EXPRESSION MULTIPLY . EXPRESSION
 
@@ -944,16 +966,16 @@ State 59
     DOUBLE_TYPE   shift, and go to state 15
     PIPE          shift, and go to state 17
 
-    $default  reduce using rule 57 (INDEXING)
+    $default  reduce using rule 58 (INDEXING)
 
-    EXPRESSION     go to state 85
+    EXPRESSION     go to state 87
     VARIABLE_TYPE  go to state 24
     INDEXING       go to state 25
     VARIABLE       go to state 35
     VARIABLE_EVAL  go to state 27
 
 
-State 60
+State 61
 
    50 EXPRESSION: EXPRESSION DIVIDE . EXPRESSION
 
@@ -966,48 +988,7 @@ State 60
     DOUBLE_TYPE   shift, and go to state 15
     PIPE          shift, and go to state 17
 
-    $default  reduce using rule 57 (INDEXING)
-
-    EXPRESSION     go to state 86
-    VARIABLE_TYPE  go to state 24
-    INDEXING       go to state 25
-    VARIABLE       go to state 35
-    VARIABLE_EVAL  go to state 27
-
-
-State 61
-
-   60 VARIABLE_EVAL: VARIABLE_TYPE TILDA . VARIABLE
-
-    PIPE  shift, and go to state 17
-
-    $default  reduce using rule 57 (INDEXING)
-
-    INDEXING  go to state 25
-    VARIABLE  go to state 87
-
-
-State 62
-
-   58 VARIABLE: INDEXING VARIABLE_ID .
-
-    $default  reduce using rule 58 (VARIABLE)
-
-
-State 63
-
-   66 VARIABLE_ASSIGNMENT: VARIABLE ASSIGNMENT . EXPRESSION
-
-    INTNUMBER     shift, and go to state 5
-    DOUBLENUMBER  shift, and go to state 6
-    PLUS          shift, and go to state 7
-    MINUS         shift, and go to state 8
-    L_ROUND       shift, and go to state 9
-    INTEGER_TYPE  shift, and go to state 14
-    DOUBLE_TYPE   shift, and go to state 15
-    PIPE          shift, and go to state 17
-
-    $default  reduce using rule 57 (INDEXING)
+    $default  reduce using rule 58 (INDEXING)
 
     EXPRESSION     go to state 88
     VARIABLE_TYPE  go to state 24
@@ -1016,31 +997,23 @@ State 63
     VARIABLE_EVAL  go to state 27
 
 
+State 62
+
+   54 EXPRESSION: VARIABLE_TYPE TILDA . L_ROUND EXPRESSION R_ROUND
+
+    L_ROUND  shift, and go to state 89
+
+
+State 63
+
+   59 VARIABLE: INDEXING VARIABLE_ID .
+
+    $default  reduce using rule 59 (VARIABLE)
+
+
 State 64
 
-   65 VARIABLE_SWAP: VARIABLE L_ANGLE . MINUS R_ANGLE VARIABLE
-
-    MINUS  shift, and go to state 89
-
-
-State 65
-
-   63 DECLARATION: ACCESS_MODIFIER DOUBLECOMMA . VARIABLE_ID DOUBLECOMMA VARIABLE_TYPE
-   64            | ACCESS_MODIFIER DOUBLECOMMA . VARIABLE_ID DOUBLECOMMA VARIABLE_TYPE DOUBLECOMMA EXPRESSION
-
-    VARIABLE_ID  shift, and go to state 90
-
-
-State 66
-
-   53 EXPRESSION: L_ROUND EXPRESSION R_ROUND .
-
-    $default  reduce using rule 53 (EXPRESSION)
-
-
-State 67
-
-   68 READ_VARIABLE: READ VARIABLE_ID DOUBLECOMMA . EXPRESSION
+   67 VARIABLE_ASSIGNMENT: VARIABLE ASSIGNMENT . EXPRESSION
 
     INTNUMBER     shift, and go to state 5
     DOUBLENUMBER  shift, and go to state 6
@@ -1051,19 +1024,41 @@ State 67
     DOUBLE_TYPE   shift, and go to state 15
     PIPE          shift, and go to state 17
 
-    $default  reduce using rule 57 (INDEXING)
+    $default  reduce using rule 58 (INDEXING)
 
-    EXPRESSION     go to state 91
+    EXPRESSION     go to state 90
     VARIABLE_TYPE  go to state 24
     INDEXING       go to state 25
     VARIABLE       go to state 35
     VARIABLE_EVAL  go to state 27
 
 
+State 65
+
+   66 VARIABLE_SWAP: VARIABLE L_ANGLE . MINUS R_ANGLE VARIABLE
+
+    MINUS  shift, and go to state 91
+
+
+State 66
+
+   63 DECLARATION: ACCESS_MODIFIER DOUBLECOMMA . VARIABLE_ID DOUBLECOMMA VARIABLE_TYPE
+   64            | ACCESS_MODIFIER DOUBLECOMMA . VARIABLE_ID DOUBLECOMMA VARIABLE_TYPE DOUBLECOMMA EXPRESSION
+   65            | ACCESS_MODIFIER DOUBLECOMMA . VARIABLE_ID DOUBLECOMMA VARIABLE_TYPE DOUBLECOMMA EXPRESSION DOUBLECOMMA EXPRESSION
+
+    VARIABLE_ID  shift, and go to state 92
+
+
+State 67
+
+   53 EXPRESSION: L_ROUND EXPRESSION R_ROUND .
+
+    $default  reduce using rule 53 (EXPRESSION)
+
+
 State 68
 
-   69 PRINT_VARIABLE: PRINT VARIABLE_ID DOUBLECOMMA . EXPRESSION MINUS R_ANGLE EXPRESSION
-   70               | PRINT VARIABLE_ID DOUBLECOMMA . EXPRESSION ASSIGNMENT R_ANGLE EXPRESSION
+   69 READ_VARIABLE: READ VARIABLE_ID DOUBLECOMMA . EXPRESSION
 
     INTNUMBER     shift, and go to state 5
     DOUBLENUMBER  shift, and go to state 6
@@ -1074,9 +1069,9 @@ State 68
     DOUBLE_TYPE   shift, and go to state 15
     PIPE          shift, and go to state 17
 
-    $default  reduce using rule 57 (INDEXING)
+    $default  reduce using rule 58 (INDEXING)
 
-    EXPRESSION     go to state 92
+    EXPRESSION     go to state 93
     VARIABLE_TYPE  go to state 24
     INDEXING       go to state 25
     VARIABLE       go to state 35
@@ -1085,59 +1080,98 @@ State 68
 
 State 69
 
-   30 WHILEBLOCK: WHILE $@5 L_BOX . BOOLEXPRESSION $@6 R_BOX $@7 L_ANGLE push PROG pop R_ANGLE
+   70 PRINT_VARIABLE: PRINT VARIABLE_ID DOUBLECOMMA . EXPRESSION MINUS R_ANGLE EXPRESSION
+   71               | PRINT VARIABLE_ID DOUBLECOMMA . EXPRESSION ASSIGNMENT R_ANGLE EXPRESSION
 
-    error         shift, and go to state 47
     INTNUMBER     shift, and go to state 5
     DOUBLENUMBER  shift, and go to state 6
     PLUS          shift, and go to state 7
     MINUS         shift, and go to state 8
-    L_ROUND       shift, and go to state 48
-    NOT           shift, and go to state 49
+    L_ROUND       shift, and go to state 9
     INTEGER_TYPE  shift, and go to state 14
     DOUBLE_TYPE   shift, and go to state 15
     PIPE          shift, and go to state 17
 
-    VARIABLE_ID  reduce using rule 57 (INDEXING)
+    $default  reduce using rule 58 (INDEXING)
 
-    EQUALITY        go to state 51
-    NOTEQUALITY     go to state 52
-    SMALLER         go to state 53
-    BIGGER          go to state 54
-    BOOLEXPRESSION  go to state 93
-    EXPRESSION      go to state 56
+    EXPRESSION     go to state 94
+    VARIABLE_TYPE  go to state 24
+    INDEXING       go to state 25
+    VARIABLE       go to state 35
+    VARIABLE_EVAL  go to state 27
+
+
+State 70
+
+   47 EXPRESSION: EXPRESSION . PLUS EXPRESSION
+   48           | EXPRESSION . MINUS EXPRESSION
+   49           | EXPRESSION . MULTIPLY EXPRESSION
+   50           | EXPRESSION . DIVIDE EXPRESSION
+   72 PRINT_VARIABLE: PRINT DOUBLECOMMA EXPRESSION .
+
+    PLUS      shift, and go to state 58
+    MINUS     shift, and go to state 59
+    MULTIPLY  shift, and go to state 60
+    DIVIDE    shift, and go to state 61
+
+    $default  reduce using rule 72 (PRINT_VARIABLE)
+
+
+State 71
+
+   30 WHILEBLOCK: WHILE $@5 L_BOX . BOOLEXPRESSION $@6 R_BOX $@7 L_ANGLE push PROG pop R_ANGLE
+
+    error         shift, and go to state 48
+    INTNUMBER     shift, and go to state 5
+    DOUBLENUMBER  shift, and go to state 6
+    PLUS          shift, and go to state 7
+    MINUS         shift, and go to state 8
+    L_ROUND       shift, and go to state 49
+    NOT           shift, and go to state 50
+    INTEGER_TYPE  shift, and go to state 14
+    DOUBLE_TYPE   shift, and go to state 15
+    PIPE          shift, and go to state 17
+
+    VARIABLE_ID  reduce using rule 58 (INDEXING)
+
+    EQUALITY        go to state 52
+    NOTEQUALITY     go to state 53
+    SMALLER         go to state 54
+    BIGGER          go to state 55
+    BOOLEXPRESSION  go to state 95
+    EXPRESSION      go to state 57
     VARIABLE_TYPE   go to state 24
     INDEXING        go to state 25
     VARIABLE        go to state 35
     VARIABLE_EVAL   go to state 27
 
 
-State 70
+State 72
 
-   56 INDEXING: PIPE EXPRESSION PIPE .
+   57 INDEXING: PIPE EXPRESSION PIPE .
 
-    $default  reduce using rule 56 (INDEXING)
+    $default  reduce using rule 57 (INDEXING)
 
 
-State 71
+State 73
 
     5 PROG: PROG COMMAND END .
 
     $default  reduce using rule 5 (PROG)
 
 
-State 72
+State 74
 
    39 BOOLEXPRESSION: BOOLEXPRESSION . OR BOOLEXPRESSION
    40               | BOOLEXPRESSION . AND BOOLEXPRESSION
    41               | L_ROUND BOOLEXPRESSION . R_ROUND
 
-    R_ROUND  shift, and go to state 94
-    AND      shift, and go to state 77
-    OR       shift, and go to state 78
+    R_ROUND  shift, and go to state 96
+    AND      shift, and go to state 79
+    OR       shift, and go to state 80
 
 
-State 73
+State 75
 
    31 EQUALITY: EXPRESSION . EQUAL EXPRESSION
    32 NOTEQUALITY: EXPRESSION . NOT_EQUAL EXPRESSION
@@ -1149,122 +1183,122 @@ State 73
    50           | EXPRESSION . DIVIDE EXPRESSION
    53           | L_ROUND EXPRESSION . R_ROUND
 
-    PLUS       shift, and go to state 57
-    MINUS      shift, and go to state 58
-    MULTIPLY   shift, and go to state 59
-    DIVIDE     shift, and go to state 60
-    R_ROUND    shift, and go to state 66
-    L_ANGLE    shift, and go to state 79
-    R_ANGLE    shift, and go to state 80
-    EQUAL      shift, and go to state 81
-    NOT_EQUAL  shift, and go to state 82
+    PLUS       shift, and go to state 58
+    MINUS      shift, and go to state 59
+    MULTIPLY   shift, and go to state 60
+    DIVIDE     shift, and go to state 61
+    R_ROUND    shift, and go to state 67
+    L_ANGLE    shift, and go to state 81
+    R_ANGLE    shift, and go to state 82
+    EQUAL      shift, and go to state 83
+    NOT_EQUAL  shift, and go to state 84
 
 
-State 74
+State 76
 
    42 BOOLEXPRESSION: NOT L_ROUND . BOOLEXPRESSION R_ROUND
 
-    error         shift, and go to state 47
+    error         shift, and go to state 48
     INTNUMBER     shift, and go to state 5
     DOUBLENUMBER  shift, and go to state 6
     PLUS          shift, and go to state 7
     MINUS         shift, and go to state 8
-    L_ROUND       shift, and go to state 48
-    NOT           shift, and go to state 49
+    L_ROUND       shift, and go to state 49
+    NOT           shift, and go to state 50
     INTEGER_TYPE  shift, and go to state 14
     DOUBLE_TYPE   shift, and go to state 15
     PIPE          shift, and go to state 17
 
-    VARIABLE_ID  reduce using rule 57 (INDEXING)
+    VARIABLE_ID  reduce using rule 58 (INDEXING)
 
-    EQUALITY        go to state 51
-    NOTEQUALITY     go to state 52
-    SMALLER         go to state 53
-    BIGGER          go to state 54
-    BOOLEXPRESSION  go to state 95
-    EXPRESSION      go to state 56
+    EQUALITY        go to state 52
+    NOTEQUALITY     go to state 53
+    SMALLER         go to state 54
+    BIGGER          go to state 55
+    BOOLEXPRESSION  go to state 97
+    EXPRESSION      go to state 57
     VARIABLE_TYPE   go to state 24
     INDEXING        go to state 25
     VARIABLE        go to state 35
     VARIABLE_EVAL   go to state 27
 
 
-State 75
+State 77
 
    23 IFBLOCK: openIf captureExpression push . continueIf R_ANGLE pop
    26        | openIf captureExpression push . continueIf L_ANGLE pop push R_ANGLE $@3 PROG $@4 R_ANGLE pop
 
-    L_ANGLE  shift, and go to state 96
+    L_ANGLE  shift, and go to state 98
 
-    continueIf  go to state 97
+    continueIf  go to state 99
 
 
-State 76
+State 78
 
    22 captureExpression: BOOLEXPRESSION R_BOX .
 
     $default  reduce using rule 22 (captureExpression)
 
 
-State 77
+State 79
 
    40 BOOLEXPRESSION: BOOLEXPRESSION AND . BOOLEXPRESSION
 
-    error         shift, and go to state 47
+    error         shift, and go to state 48
     INTNUMBER     shift, and go to state 5
     DOUBLENUMBER  shift, and go to state 6
     PLUS          shift, and go to state 7
     MINUS         shift, and go to state 8
-    L_ROUND       shift, and go to state 48
-    NOT           shift, and go to state 49
+    L_ROUND       shift, and go to state 49
+    NOT           shift, and go to state 50
     INTEGER_TYPE  shift, and go to state 14
     DOUBLE_TYPE   shift, and go to state 15
     PIPE          shift, and go to state 17
 
-    VARIABLE_ID  reduce using rule 57 (INDEXING)
+    VARIABLE_ID  reduce using rule 58 (INDEXING)
 
-    EQUALITY        go to state 51
-    NOTEQUALITY     go to state 52
-    SMALLER         go to state 53
-    BIGGER          go to state 54
-    BOOLEXPRESSION  go to state 98
-    EXPRESSION      go to state 56
+    EQUALITY        go to state 52
+    NOTEQUALITY     go to state 53
+    SMALLER         go to state 54
+    BIGGER          go to state 55
+    BOOLEXPRESSION  go to state 100
+    EXPRESSION      go to state 57
     VARIABLE_TYPE   go to state 24
     INDEXING        go to state 25
     VARIABLE        go to state 35
     VARIABLE_EVAL   go to state 27
 
 
-State 78
+State 80
 
    39 BOOLEXPRESSION: BOOLEXPRESSION OR . BOOLEXPRESSION
 
-    error         shift, and go to state 47
+    error         shift, and go to state 48
     INTNUMBER     shift, and go to state 5
     DOUBLENUMBER  shift, and go to state 6
     PLUS          shift, and go to state 7
     MINUS         shift, and go to state 8
-    L_ROUND       shift, and go to state 48
-    NOT           shift, and go to state 49
+    L_ROUND       shift, and go to state 49
+    NOT           shift, and go to state 50
     INTEGER_TYPE  shift, and go to state 14
     DOUBLE_TYPE   shift, and go to state 15
     PIPE          shift, and go to state 17
 
-    VARIABLE_ID  reduce using rule 57 (INDEXING)
+    VARIABLE_ID  reduce using rule 58 (INDEXING)
 
-    EQUALITY        go to state 51
-    NOTEQUALITY     go to state 52
-    SMALLER         go to state 53
-    BIGGER          go to state 54
-    BOOLEXPRESSION  go to state 99
-    EXPRESSION      go to state 56
+    EQUALITY        go to state 52
+    NOTEQUALITY     go to state 53
+    SMALLER         go to state 54
+    BIGGER          go to state 55
+    BOOLEXPRESSION  go to state 101
+    EXPRESSION      go to state 57
     VARIABLE_TYPE   go to state 24
     INDEXING        go to state 25
     VARIABLE        go to state 35
     VARIABLE_EVAL   go to state 27
 
 
-State 79
+State 81
 
    33 SMALLER: EXPRESSION L_ANGLE . EXPRESSION
 
@@ -1277,16 +1311,16 @@ State 79
     DOUBLE_TYPE   shift, and go to state 15
     PIPE          shift, and go to state 17
 
-    $default  reduce using rule 57 (INDEXING)
+    $default  reduce using rule 58 (INDEXING)
 
-    EXPRESSION     go to state 100
+    EXPRESSION     go to state 102
     VARIABLE_TYPE  go to state 24
     INDEXING       go to state 25
     VARIABLE       go to state 35
     VARIABLE_EVAL  go to state 27
 
 
-State 80
+State 82
 
    34 BIGGER: EXPRESSION R_ANGLE . EXPRESSION
 
@@ -1299,16 +1333,16 @@ State 80
     DOUBLE_TYPE   shift, and go to state 15
     PIPE          shift, and go to state 17
 
-    $default  reduce using rule 57 (INDEXING)
+    $default  reduce using rule 58 (INDEXING)
 
-    EXPRESSION     go to state 101
+    EXPRESSION     go to state 103
     VARIABLE_TYPE  go to state 24
     INDEXING       go to state 25
     VARIABLE       go to state 35
     VARIABLE_EVAL  go to state 27
 
 
-State 81
+State 83
 
    31 EQUALITY: EXPRESSION EQUAL . EXPRESSION
 
@@ -1321,16 +1355,16 @@ State 81
     DOUBLE_TYPE   shift, and go to state 15
     PIPE          shift, and go to state 17
 
-    $default  reduce using rule 57 (INDEXING)
+    $default  reduce using rule 58 (INDEXING)
 
-    EXPRESSION     go to state 102
+    EXPRESSION     go to state 104
     VARIABLE_TYPE  go to state 24
     INDEXING       go to state 25
     VARIABLE       go to state 35
     VARIABLE_EVAL  go to state 27
 
 
-State 82
+State 84
 
    32 NOTEQUALITY: EXPRESSION NOT_EQUAL . EXPRESSION
 
@@ -1343,16 +1377,16 @@ State 82
     DOUBLE_TYPE   shift, and go to state 15
     PIPE          shift, and go to state 17
 
-    $default  reduce using rule 57 (INDEXING)
+    $default  reduce using rule 58 (INDEXING)
 
-    EXPRESSION     go to state 103
+    EXPRESSION     go to state 105
     VARIABLE_TYPE  go to state 24
     INDEXING       go to state 25
     VARIABLE       go to state 35
     VARIABLE_EVAL  go to state 27
 
 
-State 83
+State 85
 
    47 EXPRESSION: EXPRESSION . PLUS EXPRESSION
    47           | EXPRESSION PLUS EXPRESSION .
@@ -1360,13 +1394,13 @@ State 83
    49           | EXPRESSION . MULTIPLY EXPRESSION
    50           | EXPRESSION . DIVIDE EXPRESSION
 
-    MULTIPLY  shift, and go to state 59
-    DIVIDE    shift, and go to state 60
+    MULTIPLY  shift, and go to state 60
+    DIVIDE    shift, and go to state 61
 
     $default  reduce using rule 47 (EXPRESSION)
 
 
-State 84
+State 86
 
    47 EXPRESSION: EXPRESSION . PLUS EXPRESSION
    48           | EXPRESSION . MINUS EXPRESSION
@@ -1374,13 +1408,13 @@ State 84
    49           | EXPRESSION . MULTIPLY EXPRESSION
    50           | EXPRESSION . DIVIDE EXPRESSION
 
-    MULTIPLY  shift, and go to state 59
-    DIVIDE    shift, and go to state 60
+    MULTIPLY  shift, and go to state 60
+    DIVIDE    shift, and go to state 61
 
     $default  reduce using rule 48 (EXPRESSION)
 
 
-State 85
+State 87
 
    47 EXPRESSION: EXPRESSION . PLUS EXPRESSION
    48           | EXPRESSION . MINUS EXPRESSION
@@ -1391,7 +1425,7 @@ State 85
     $default  reduce using rule 49 (EXPRESSION)
 
 
-State 86
+State 88
 
    47 EXPRESSION: EXPRESSION . PLUS EXPRESSION
    48           | EXPRESSION . MINUS EXPRESSION
@@ -1402,127 +1436,143 @@ State 86
     $default  reduce using rule 50 (EXPRESSION)
 
 
-State 87
-
-   60 VARIABLE_EVAL: VARIABLE_TYPE TILDA VARIABLE .
-
-    $default  reduce using rule 60 (VARIABLE_EVAL)
-
-
-State 88
-
-   47 EXPRESSION: EXPRESSION . PLUS EXPRESSION
-   48           | EXPRESSION . MINUS EXPRESSION
-   49           | EXPRESSION . MULTIPLY EXPRESSION
-   50           | EXPRESSION . DIVIDE EXPRESSION
-   66 VARIABLE_ASSIGNMENT: VARIABLE ASSIGNMENT EXPRESSION .
-
-    PLUS      shift, and go to state 57
-    MINUS     shift, and go to state 58
-    MULTIPLY  shift, and go to state 59
-    DIVIDE    shift, and go to state 60
-
-    $default  reduce using rule 66 (VARIABLE_ASSIGNMENT)
-
-
 State 89
 
-   65 VARIABLE_SWAP: VARIABLE L_ANGLE MINUS . R_ANGLE VARIABLE
+   54 EXPRESSION: VARIABLE_TYPE TILDA L_ROUND . EXPRESSION R_ROUND
 
-    R_ANGLE  shift, and go to state 104
+    INTNUMBER     shift, and go to state 5
+    DOUBLENUMBER  shift, and go to state 6
+    PLUS          shift, and go to state 7
+    MINUS         shift, and go to state 8
+    L_ROUND       shift, and go to state 9
+    INTEGER_TYPE  shift, and go to state 14
+    DOUBLE_TYPE   shift, and go to state 15
+    PIPE          shift, and go to state 17
+
+    $default  reduce using rule 58 (INDEXING)
+
+    EXPRESSION     go to state 106
+    VARIABLE_TYPE  go to state 24
+    INDEXING       go to state 25
+    VARIABLE       go to state 35
+    VARIABLE_EVAL  go to state 27
 
 
 State 90
 
-   63 DECLARATION: ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID . DOUBLECOMMA VARIABLE_TYPE
-   64            | ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID . DOUBLECOMMA VARIABLE_TYPE DOUBLECOMMA EXPRESSION
+   47 EXPRESSION: EXPRESSION . PLUS EXPRESSION
+   48           | EXPRESSION . MINUS EXPRESSION
+   49           | EXPRESSION . MULTIPLY EXPRESSION
+   50           | EXPRESSION . DIVIDE EXPRESSION
+   67 VARIABLE_ASSIGNMENT: VARIABLE ASSIGNMENT EXPRESSION .
 
-    DOUBLECOMMA  shift, and go to state 105
+    PLUS      shift, and go to state 58
+    MINUS     shift, and go to state 59
+    MULTIPLY  shift, and go to state 60
+    DIVIDE    shift, and go to state 61
+
+    $default  reduce using rule 67 (VARIABLE_ASSIGNMENT)
 
 
 State 91
 
-   47 EXPRESSION: EXPRESSION . PLUS EXPRESSION
-   48           | EXPRESSION . MINUS EXPRESSION
-   49           | EXPRESSION . MULTIPLY EXPRESSION
-   50           | EXPRESSION . DIVIDE EXPRESSION
-   68 READ_VARIABLE: READ VARIABLE_ID DOUBLECOMMA EXPRESSION .
+   66 VARIABLE_SWAP: VARIABLE L_ANGLE MINUS . R_ANGLE VARIABLE
 
-    PLUS      shift, and go to state 57
-    MINUS     shift, and go to state 58
-    MULTIPLY  shift, and go to state 59
-    DIVIDE    shift, and go to state 60
-
-    $default  reduce using rule 68 (READ_VARIABLE)
+    R_ANGLE  shift, and go to state 107
 
 
 State 92
 
+   63 DECLARATION: ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID . DOUBLECOMMA VARIABLE_TYPE
+   64            | ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID . DOUBLECOMMA VARIABLE_TYPE DOUBLECOMMA EXPRESSION
+   65            | ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID . DOUBLECOMMA VARIABLE_TYPE DOUBLECOMMA EXPRESSION DOUBLECOMMA EXPRESSION
+
+    DOUBLECOMMA  shift, and go to state 108
+
+
+State 93
+
    47 EXPRESSION: EXPRESSION . PLUS EXPRESSION
    48           | EXPRESSION . MINUS EXPRESSION
    49           | EXPRESSION . MULTIPLY EXPRESSION
    50           | EXPRESSION . DIVIDE EXPRESSION
-   69 PRINT_VARIABLE: PRINT VARIABLE_ID DOUBLECOMMA EXPRESSION . MINUS R_ANGLE EXPRESSION
-   70               | PRINT VARIABLE_ID DOUBLECOMMA EXPRESSION . ASSIGNMENT R_ANGLE EXPRESSION
+   69 READ_VARIABLE: READ VARIABLE_ID DOUBLECOMMA EXPRESSION .
 
-    PLUS        shift, and go to state 57
-    MINUS       shift, and go to state 106
-    MULTIPLY    shift, and go to state 59
-    DIVIDE      shift, and go to state 60
-    ASSIGNMENT  shift, and go to state 107
+    PLUS      shift, and go to state 58
+    MINUS     shift, and go to state 59
+    MULTIPLY  shift, and go to state 60
+    DIVIDE    shift, and go to state 61
+
+    $default  reduce using rule 69 (READ_VARIABLE)
 
 
-State 93
+State 94
+
+   47 EXPRESSION: EXPRESSION . PLUS EXPRESSION
+   48           | EXPRESSION . MINUS EXPRESSION
+   49           | EXPRESSION . MULTIPLY EXPRESSION
+   50           | EXPRESSION . DIVIDE EXPRESSION
+   70 PRINT_VARIABLE: PRINT VARIABLE_ID DOUBLECOMMA EXPRESSION . MINUS R_ANGLE EXPRESSION
+   71               | PRINT VARIABLE_ID DOUBLECOMMA EXPRESSION . ASSIGNMENT R_ANGLE EXPRESSION
+
+    PLUS        shift, and go to state 58
+    MINUS       shift, and go to state 109
+    MULTIPLY    shift, and go to state 60
+    DIVIDE      shift, and go to state 61
+    ASSIGNMENT  shift, and go to state 110
+
+
+State 95
 
    30 WHILEBLOCK: WHILE $@5 L_BOX BOOLEXPRESSION . $@6 R_BOX $@7 L_ANGLE push PROG pop R_ANGLE
    39 BOOLEXPRESSION: BOOLEXPRESSION . OR BOOLEXPRESSION
    40               | BOOLEXPRESSION . AND BOOLEXPRESSION
 
-    AND  shift, and go to state 77
-    OR   shift, and go to state 78
+    AND  shift, and go to state 79
+    OR   shift, and go to state 80
 
     $default  reduce using rule 28 ($@6)
 
-    $@6  go to state 108
+    $@6  go to state 111
 
 
-State 94
+State 96
 
    41 BOOLEXPRESSION: L_ROUND BOOLEXPRESSION R_ROUND .
 
     $default  reduce using rule 41 (BOOLEXPRESSION)
 
 
-State 95
+State 97
 
    39 BOOLEXPRESSION: BOOLEXPRESSION . OR BOOLEXPRESSION
    40               | BOOLEXPRESSION . AND BOOLEXPRESSION
    42               | NOT L_ROUND BOOLEXPRESSION . R_ROUND
 
-    R_ROUND  shift, and go to state 109
-    AND      shift, and go to state 77
-    OR       shift, and go to state 78
+    R_ROUND  shift, and go to state 112
+    AND      shift, and go to state 79
+    OR       shift, and go to state 80
 
 
-State 96
+State 98
 
    21 continueIf: L_ANGLE . $@2 PROG
 
     $default  reduce using rule 20 ($@2)
 
-    $@2  go to state 110
+    $@2  go to state 113
 
 
-State 97
+State 99
 
    23 IFBLOCK: openIf captureExpression push continueIf . R_ANGLE pop
    26        | openIf captureExpression push continueIf . L_ANGLE pop push R_ANGLE $@3 PROG $@4 R_ANGLE pop
 
-    L_ANGLE  shift, and go to state 111
-    R_ANGLE  shift, and go to state 112
+    L_ANGLE  shift, and go to state 114
+    R_ANGLE  shift, and go to state 115
 
 
-State 98
+State 100
 
    39 BOOLEXPRESSION: BOOLEXPRESSION . OR BOOLEXPRESSION
    40               | BOOLEXPRESSION . AND BOOLEXPRESSION
@@ -1531,7 +1581,7 @@ State 98
     $default  reduce using rule 40 (BOOLEXPRESSION)
 
 
-State 99
+State 101
 
    39 BOOLEXPRESSION: BOOLEXPRESSION . OR BOOLEXPRESSION
    39               | BOOLEXPRESSION OR BOOLEXPRESSION .
@@ -1540,7 +1590,7 @@ State 99
     $default  reduce using rule 39 (BOOLEXPRESSION)
 
 
-State 100
+State 102
 
    33 SMALLER: EXPRESSION L_ANGLE EXPRESSION .
    47 EXPRESSION: EXPRESSION . PLUS EXPRESSION
@@ -1548,15 +1598,15 @@ State 100
    49           | EXPRESSION . MULTIPLY EXPRESSION
    50           | EXPRESSION . DIVIDE EXPRESSION
 
-    PLUS      shift, and go to state 57
-    MINUS     shift, and go to state 58
-    MULTIPLY  shift, and go to state 59
-    DIVIDE    shift, and go to state 60
+    PLUS      shift, and go to state 58
+    MINUS     shift, and go to state 59
+    MULTIPLY  shift, and go to state 60
+    DIVIDE    shift, and go to state 61
 
     $default  reduce using rule 33 (SMALLER)
 
 
-State 101
+State 103
 
    34 BIGGER: EXPRESSION R_ANGLE EXPRESSION .
    47 EXPRESSION: EXPRESSION . PLUS EXPRESSION
@@ -1564,15 +1614,15 @@ State 101
    49           | EXPRESSION . MULTIPLY EXPRESSION
    50           | EXPRESSION . DIVIDE EXPRESSION
 
-    PLUS      shift, and go to state 57
-    MINUS     shift, and go to state 58
-    MULTIPLY  shift, and go to state 59
-    DIVIDE    shift, and go to state 60
+    PLUS      shift, and go to state 58
+    MINUS     shift, and go to state 59
+    MULTIPLY  shift, and go to state 60
+    DIVIDE    shift, and go to state 61
 
     $default  reduce using rule 34 (BIGGER)
 
 
-State 102
+State 104
 
    31 EQUALITY: EXPRESSION EQUAL EXPRESSION .
    47 EXPRESSION: EXPRESSION . PLUS EXPRESSION
@@ -1580,15 +1630,15 @@ State 102
    49           | EXPRESSION . MULTIPLY EXPRESSION
    50           | EXPRESSION . DIVIDE EXPRESSION
 
-    PLUS      shift, and go to state 57
-    MINUS     shift, and go to state 58
-    MULTIPLY  shift, and go to state 59
-    DIVIDE    shift, and go to state 60
+    PLUS      shift, and go to state 58
+    MINUS     shift, and go to state 59
+    MULTIPLY  shift, and go to state 60
+    DIVIDE    shift, and go to state 61
 
     $default  reduce using rule 31 (EQUALITY)
 
 
-State 103
+State 105
 
    32 NOTEQUALITY: EXPRESSION NOT_EQUAL EXPRESSION .
    47 EXPRESSION: EXPRESSION . PLUS EXPRESSION
@@ -1596,83 +1646,99 @@ State 103
    49           | EXPRESSION . MULTIPLY EXPRESSION
    50           | EXPRESSION . DIVIDE EXPRESSION
 
-    PLUS      shift, and go to state 57
-    MINUS     shift, and go to state 58
-    MULTIPLY  shift, and go to state 59
-    DIVIDE    shift, and go to state 60
+    PLUS      shift, and go to state 58
+    MINUS     shift, and go to state 59
+    MULTIPLY  shift, and go to state 60
+    DIVIDE    shift, and go to state 61
 
     $default  reduce using rule 32 (NOTEQUALITY)
 
 
-State 104
+State 106
 
-   65 VARIABLE_SWAP: VARIABLE L_ANGLE MINUS R_ANGLE . VARIABLE
+   47 EXPRESSION: EXPRESSION . PLUS EXPRESSION
+   48           | EXPRESSION . MINUS EXPRESSION
+   49           | EXPRESSION . MULTIPLY EXPRESSION
+   50           | EXPRESSION . DIVIDE EXPRESSION
+   54           | VARIABLE_TYPE TILDA L_ROUND EXPRESSION . R_ROUND
+
+    PLUS      shift, and go to state 58
+    MINUS     shift, and go to state 59
+    MULTIPLY  shift, and go to state 60
+    DIVIDE    shift, and go to state 61
+    R_ROUND   shift, and go to state 116
+
+
+State 107
+
+   66 VARIABLE_SWAP: VARIABLE L_ANGLE MINUS R_ANGLE . VARIABLE
 
     PIPE  shift, and go to state 17
 
-    $default  reduce using rule 57 (INDEXING)
+    $default  reduce using rule 58 (INDEXING)
 
     INDEXING  go to state 25
-    VARIABLE  go to state 113
+    VARIABLE  go to state 117
 
 
-State 105
+State 108
 
    63 DECLARATION: ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID DOUBLECOMMA . VARIABLE_TYPE
    64            | ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID DOUBLECOMMA . VARIABLE_TYPE DOUBLECOMMA EXPRESSION
+   65            | ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID DOUBLECOMMA . VARIABLE_TYPE DOUBLECOMMA EXPRESSION DOUBLECOMMA EXPRESSION
 
     INTEGER_TYPE  shift, and go to state 14
     DOUBLE_TYPE   shift, and go to state 15
 
-    VARIABLE_TYPE  go to state 114
+    VARIABLE_TYPE  go to state 118
 
 
-State 106
+State 109
 
    48 EXPRESSION: EXPRESSION MINUS . EXPRESSION
-   69 PRINT_VARIABLE: PRINT VARIABLE_ID DOUBLECOMMA EXPRESSION MINUS . R_ANGLE EXPRESSION
+   70 PRINT_VARIABLE: PRINT VARIABLE_ID DOUBLECOMMA EXPRESSION MINUS . R_ANGLE EXPRESSION
 
     INTNUMBER     shift, and go to state 5
     DOUBLENUMBER  shift, and go to state 6
     PLUS          shift, and go to state 7
     MINUS         shift, and go to state 8
     L_ROUND       shift, and go to state 9
-    R_ANGLE       shift, and go to state 115
+    R_ANGLE       shift, and go to state 119
     INTEGER_TYPE  shift, and go to state 14
     DOUBLE_TYPE   shift, and go to state 15
     PIPE          shift, and go to state 17
 
-    $default  reduce using rule 57 (INDEXING)
+    $default  reduce using rule 58 (INDEXING)
 
-    EXPRESSION     go to state 84
+    EXPRESSION     go to state 86
     VARIABLE_TYPE  go to state 24
     INDEXING       go to state 25
     VARIABLE       go to state 35
     VARIABLE_EVAL  go to state 27
 
 
-State 107
+State 110
 
-   70 PRINT_VARIABLE: PRINT VARIABLE_ID DOUBLECOMMA EXPRESSION ASSIGNMENT . R_ANGLE EXPRESSION
+   71 PRINT_VARIABLE: PRINT VARIABLE_ID DOUBLECOMMA EXPRESSION ASSIGNMENT . R_ANGLE EXPRESSION
 
-    R_ANGLE  shift, and go to state 116
+    R_ANGLE  shift, and go to state 120
 
 
-State 108
+State 111
 
    30 WHILEBLOCK: WHILE $@5 L_BOX BOOLEXPRESSION $@6 . R_BOX $@7 L_ANGLE push PROG pop R_ANGLE
 
-    R_BOX  shift, and go to state 117
+    R_BOX  shift, and go to state 121
 
 
-State 109
+State 112
 
    42 BOOLEXPRESSION: NOT L_ROUND BOOLEXPRESSION R_ROUND .
 
     $default  reduce using rule 42 (BOOLEXPRESSION)
 
 
-State 110
+State 113
 
    21 continueIf: L_ANGLE $@2 . PROG
 
@@ -1691,10 +1757,10 @@ State 110
     GLOBAL_MODIFIER  shift, and go to state 16
     PIPE             shift, and go to state 17
 
-    VARIABLE_ID  reduce using rule 57 (INDEXING)
+    VARIABLE_ID  reduce using rule 58 (INDEXING)
     DOUBLECOMMA  reduce using rule 62 (ACCESS_MODIFIER)
 
-    PROG                 go to state 118
+    PROG                 go to state 122
     COMMAND              go to state 19
     openIf               go to state 20
     IFBLOCK              go to state 21
@@ -1712,66 +1778,52 @@ State 110
     PRINT_VARIABLE       go to state 33
 
 
-State 111
+State 114
 
    26 IFBLOCK: openIf captureExpression push continueIf L_ANGLE . pop push R_ANGLE $@3 PROG $@4 R_ANGLE pop
 
     $default  reduce using rule 18 (pop)
 
-    pop  go to state 119
+    pop  go to state 123
 
 
-State 112
+State 115
 
    23 IFBLOCK: openIf captureExpression push continueIf R_ANGLE . pop
 
     $default  reduce using rule 18 (pop)
 
-    pop  go to state 120
-
-
-State 113
-
-   65 VARIABLE_SWAP: VARIABLE L_ANGLE MINUS R_ANGLE VARIABLE .
-
-    $default  reduce using rule 65 (VARIABLE_SWAP)
-
-
-State 114
-
-   63 DECLARATION: ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID DOUBLECOMMA VARIABLE_TYPE .
-   64            | ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID DOUBLECOMMA VARIABLE_TYPE . DOUBLECOMMA EXPRESSION
-
-    DOUBLECOMMA  shift, and go to state 121
-
-    $default  reduce using rule 63 (DECLARATION)
-
-
-State 115
-
-   69 PRINT_VARIABLE: PRINT VARIABLE_ID DOUBLECOMMA EXPRESSION MINUS R_ANGLE . EXPRESSION
-
-    INTNUMBER     shift, and go to state 5
-    DOUBLENUMBER  shift, and go to state 6
-    PLUS          shift, and go to state 7
-    MINUS         shift, and go to state 8
-    L_ROUND       shift, and go to state 9
-    INTEGER_TYPE  shift, and go to state 14
-    DOUBLE_TYPE   shift, and go to state 15
-    PIPE          shift, and go to state 17
-
-    $default  reduce using rule 57 (INDEXING)
-
-    EXPRESSION     go to state 122
-    VARIABLE_TYPE  go to state 24
-    INDEXING       go to state 25
-    VARIABLE       go to state 35
-    VARIABLE_EVAL  go to state 27
+    pop  go to state 124
 
 
 State 116
 
-   70 PRINT_VARIABLE: PRINT VARIABLE_ID DOUBLECOMMA EXPRESSION ASSIGNMENT R_ANGLE . EXPRESSION
+   54 EXPRESSION: VARIABLE_TYPE TILDA L_ROUND EXPRESSION R_ROUND .
+
+    $default  reduce using rule 54 (EXPRESSION)
+
+
+State 117
+
+   66 VARIABLE_SWAP: VARIABLE L_ANGLE MINUS R_ANGLE VARIABLE .
+
+    $default  reduce using rule 66 (VARIABLE_SWAP)
+
+
+State 118
+
+   63 DECLARATION: ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID DOUBLECOMMA VARIABLE_TYPE .
+   64            | ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID DOUBLECOMMA VARIABLE_TYPE . DOUBLECOMMA EXPRESSION
+   65            | ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID DOUBLECOMMA VARIABLE_TYPE . DOUBLECOMMA EXPRESSION DOUBLECOMMA EXPRESSION
+
+    DOUBLECOMMA  shift, and go to state 125
+
+    $default  reduce using rule 63 (DECLARATION)
+
+
+State 119
+
+   70 PRINT_VARIABLE: PRINT VARIABLE_ID DOUBLECOMMA EXPRESSION MINUS R_ANGLE . EXPRESSION
 
     INTNUMBER     shift, and go to state 5
     DOUBLENUMBER  shift, and go to state 6
@@ -1782,25 +1834,47 @@ State 116
     DOUBLE_TYPE   shift, and go to state 15
     PIPE          shift, and go to state 17
 
-    $default  reduce using rule 57 (INDEXING)
+    $default  reduce using rule 58 (INDEXING)
 
-    EXPRESSION     go to state 123
+    EXPRESSION     go to state 126
     VARIABLE_TYPE  go to state 24
     INDEXING       go to state 25
     VARIABLE       go to state 35
     VARIABLE_EVAL  go to state 27
 
 
-State 117
+State 120
+
+   71 PRINT_VARIABLE: PRINT VARIABLE_ID DOUBLECOMMA EXPRESSION ASSIGNMENT R_ANGLE . EXPRESSION
+
+    INTNUMBER     shift, and go to state 5
+    DOUBLENUMBER  shift, and go to state 6
+    PLUS          shift, and go to state 7
+    MINUS         shift, and go to state 8
+    L_ROUND       shift, and go to state 9
+    INTEGER_TYPE  shift, and go to state 14
+    DOUBLE_TYPE   shift, and go to state 15
+    PIPE          shift, and go to state 17
+
+    $default  reduce using rule 58 (INDEXING)
+
+    EXPRESSION     go to state 127
+    VARIABLE_TYPE  go to state 24
+    INDEXING       go to state 25
+    VARIABLE       go to state 35
+    VARIABLE_EVAL  go to state 27
+
+
+State 121
 
    30 WHILEBLOCK: WHILE $@5 L_BOX BOOLEXPRESSION $@6 R_BOX . $@7 L_ANGLE push PROG pop R_ANGLE
 
     $default  reduce using rule 29 ($@7)
 
-    $@7  go to state 124
+    $@7  go to state 128
 
 
-State 118
+State 122
 
     5 PROG: PROG . COMMAND END
     8     | PROG . IFBLOCK
@@ -1821,14 +1895,14 @@ State 118
     GLOBAL_MODIFIER  shift, and go to state 16
     PIPE             shift, and go to state 17
 
-    VARIABLE_ID  reduce using rule 57 (INDEXING)
+    VARIABLE_ID  reduce using rule 58 (INDEXING)
     DOUBLECOMMA  reduce using rule 62 (ACCESS_MODIFIER)
     $default     reduce using rule 21 (continueIf)
 
-    COMMAND              go to state 43
+    COMMAND              go to state 44
     openIf               go to state 20
-    IFBLOCK              go to state 44
-    WHILEBLOCK           go to state 45
+    IFBLOCK              go to state 45
+    WHILEBLOCK           go to state 46
     EXPRESSION           go to state 23
     VARIABLE_TYPE        go to state 24
     INDEXING             go to state 25
@@ -1842,25 +1916,26 @@ State 118
     PRINT_VARIABLE       go to state 33
 
 
-State 119
+State 123
 
    26 IFBLOCK: openIf captureExpression push continueIf L_ANGLE pop . push R_ANGLE $@3 PROG $@4 R_ANGLE pop
 
     $default  reduce using rule 17 (push)
 
-    push  go to state 125
+    push  go to state 129
 
 
-State 120
+State 124
 
    23 IFBLOCK: openIf captureExpression push continueIf R_ANGLE pop .
 
     $default  reduce using rule 23 (IFBLOCK)
 
 
-State 121
+State 125
 
    64 DECLARATION: ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID DOUBLECOMMA VARIABLE_TYPE DOUBLECOMMA . EXPRESSION
+   65            | ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID DOUBLECOMMA VARIABLE_TYPE DOUBLECOMMA . EXPRESSION DOUBLECOMMA EXPRESSION
 
     INTNUMBER     shift, and go to state 5
     DOUBLENUMBER  shift, and go to state 6
@@ -1871,59 +1946,13 @@ State 121
     DOUBLE_TYPE   shift, and go to state 15
     PIPE          shift, and go to state 17
 
-    $default  reduce using rule 57 (INDEXING)
+    $default  reduce using rule 58 (INDEXING)
 
-    EXPRESSION     go to state 126
+    EXPRESSION     go to state 130
     VARIABLE_TYPE  go to state 24
     INDEXING       go to state 25
     VARIABLE       go to state 35
     VARIABLE_EVAL  go to state 27
-
-
-State 122
-
-   47 EXPRESSION: EXPRESSION . PLUS EXPRESSION
-   48           | EXPRESSION . MINUS EXPRESSION
-   49           | EXPRESSION . MULTIPLY EXPRESSION
-   50           | EXPRESSION . DIVIDE EXPRESSION
-   69 PRINT_VARIABLE: PRINT VARIABLE_ID DOUBLECOMMA EXPRESSION MINUS R_ANGLE EXPRESSION .
-
-    PLUS      shift, and go to state 57
-    MINUS     shift, and go to state 58
-    MULTIPLY  shift, and go to state 59
-    DIVIDE    shift, and go to state 60
-
-    $default  reduce using rule 69 (PRINT_VARIABLE)
-
-
-State 123
-
-   47 EXPRESSION: EXPRESSION . PLUS EXPRESSION
-   48           | EXPRESSION . MINUS EXPRESSION
-   49           | EXPRESSION . MULTIPLY EXPRESSION
-   50           | EXPRESSION . DIVIDE EXPRESSION
-   70 PRINT_VARIABLE: PRINT VARIABLE_ID DOUBLECOMMA EXPRESSION ASSIGNMENT R_ANGLE EXPRESSION .
-
-    PLUS      shift, and go to state 57
-    MINUS     shift, and go to state 58
-    MULTIPLY  shift, and go to state 59
-    DIVIDE    shift, and go to state 60
-
-    $default  reduce using rule 70 (PRINT_VARIABLE)
-
-
-State 124
-
-   30 WHILEBLOCK: WHILE $@5 L_BOX BOOLEXPRESSION $@6 R_BOX $@7 . L_ANGLE push PROG pop R_ANGLE
-
-    L_ANGLE  shift, and go to state 127
-
-
-State 125
-
-   26 IFBLOCK: openIf captureExpression push continueIf L_ANGLE pop push . R_ANGLE $@3 PROG $@4 R_ANGLE pop
-
-    R_ANGLE  shift, and go to state 128
 
 
 State 126
@@ -1932,35 +1961,105 @@ State 126
    48           | EXPRESSION . MINUS EXPRESSION
    49           | EXPRESSION . MULTIPLY EXPRESSION
    50           | EXPRESSION . DIVIDE EXPRESSION
-   64 DECLARATION: ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID DOUBLECOMMA VARIABLE_TYPE DOUBLECOMMA EXPRESSION .
+   70 PRINT_VARIABLE: PRINT VARIABLE_ID DOUBLECOMMA EXPRESSION MINUS R_ANGLE EXPRESSION .
 
-    PLUS      shift, and go to state 57
-    MINUS     shift, and go to state 58
-    MULTIPLY  shift, and go to state 59
-    DIVIDE    shift, and go to state 60
+    PLUS      shift, and go to state 58
+    MINUS     shift, and go to state 59
+    MULTIPLY  shift, and go to state 60
+    DIVIDE    shift, and go to state 61
+
+    $default  reduce using rule 70 (PRINT_VARIABLE)
+
+
+State 127
+
+   47 EXPRESSION: EXPRESSION . PLUS EXPRESSION
+   48           | EXPRESSION . MINUS EXPRESSION
+   49           | EXPRESSION . MULTIPLY EXPRESSION
+   50           | EXPRESSION . DIVIDE EXPRESSION
+   71 PRINT_VARIABLE: PRINT VARIABLE_ID DOUBLECOMMA EXPRESSION ASSIGNMENT R_ANGLE EXPRESSION .
+
+    PLUS      shift, and go to state 58
+    MINUS     shift, and go to state 59
+    MULTIPLY  shift, and go to state 60
+    DIVIDE    shift, and go to state 61
+
+    $default  reduce using rule 71 (PRINT_VARIABLE)
+
+
+State 128
+
+   30 WHILEBLOCK: WHILE $@5 L_BOX BOOLEXPRESSION $@6 R_BOX $@7 . L_ANGLE push PROG pop R_ANGLE
+
+    L_ANGLE  shift, and go to state 131
+
+
+State 129
+
+   26 IFBLOCK: openIf captureExpression push continueIf L_ANGLE pop push . R_ANGLE $@3 PROG $@4 R_ANGLE pop
+
+    R_ANGLE  shift, and go to state 132
+
+
+State 130
+
+   47 EXPRESSION: EXPRESSION . PLUS EXPRESSION
+   48           | EXPRESSION . MINUS EXPRESSION
+   49           | EXPRESSION . MULTIPLY EXPRESSION
+   50           | EXPRESSION . DIVIDE EXPRESSION
+   64 DECLARATION: ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID DOUBLECOMMA VARIABLE_TYPE DOUBLECOMMA EXPRESSION .
+   65            | ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID DOUBLECOMMA VARIABLE_TYPE DOUBLECOMMA EXPRESSION . DOUBLECOMMA EXPRESSION
+
+    PLUS         shift, and go to state 58
+    MINUS        shift, and go to state 59
+    MULTIPLY     shift, and go to state 60
+    DIVIDE       shift, and go to state 61
+    DOUBLECOMMA  shift, and go to state 133
 
     $default  reduce using rule 64 (DECLARATION)
 
 
-State 127
+State 131
 
    30 WHILEBLOCK: WHILE $@5 L_BOX BOOLEXPRESSION $@6 R_BOX $@7 L_ANGLE . push PROG pop R_ANGLE
 
     $default  reduce using rule 17 (push)
 
-    push  go to state 129
+    push  go to state 134
 
 
-State 128
+State 132
 
    26 IFBLOCK: openIf captureExpression push continueIf L_ANGLE pop push R_ANGLE . $@3 PROG $@4 R_ANGLE pop
 
     $default  reduce using rule 24 ($@3)
 
-    $@3  go to state 130
+    $@3  go to state 135
 
 
-State 129
+State 133
+
+   65 DECLARATION: ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID DOUBLECOMMA VARIABLE_TYPE DOUBLECOMMA EXPRESSION DOUBLECOMMA . EXPRESSION
+
+    INTNUMBER     shift, and go to state 5
+    DOUBLENUMBER  shift, and go to state 6
+    PLUS          shift, and go to state 7
+    MINUS         shift, and go to state 8
+    L_ROUND       shift, and go to state 9
+    INTEGER_TYPE  shift, and go to state 14
+    DOUBLE_TYPE   shift, and go to state 15
+    PIPE          shift, and go to state 17
+
+    $default  reduce using rule 58 (INDEXING)
+
+    EXPRESSION     go to state 136
+    VARIABLE_TYPE  go to state 24
+    INDEXING       go to state 25
+    VARIABLE       go to state 35
+    VARIABLE_EVAL  go to state 27
+
+
+State 134
 
    30 WHILEBLOCK: WHILE $@5 L_BOX BOOLEXPRESSION $@6 R_BOX $@7 L_ANGLE push . PROG pop R_ANGLE
 
@@ -1979,10 +2078,10 @@ State 129
     GLOBAL_MODIFIER  shift, and go to state 16
     PIPE             shift, and go to state 17
 
-    VARIABLE_ID  reduce using rule 57 (INDEXING)
+    VARIABLE_ID  reduce using rule 58 (INDEXING)
     DOUBLECOMMA  reduce using rule 62 (ACCESS_MODIFIER)
 
-    PROG                 go to state 131
+    PROG                 go to state 137
     COMMAND              go to state 19
     openIf               go to state 20
     IFBLOCK              go to state 21
@@ -2000,7 +2099,7 @@ State 129
     PRINT_VARIABLE       go to state 33
 
 
-State 130
+State 135
 
    26 IFBLOCK: openIf captureExpression push continueIf L_ANGLE pop push R_ANGLE $@3 . PROG $@4 R_ANGLE pop
 
@@ -2019,10 +2118,10 @@ State 130
     GLOBAL_MODIFIER  shift, and go to state 16
     PIPE             shift, and go to state 17
 
-    VARIABLE_ID  reduce using rule 57 (INDEXING)
+    VARIABLE_ID  reduce using rule 58 (INDEXING)
     DOUBLECOMMA  reduce using rule 62 (ACCESS_MODIFIER)
 
-    PROG                 go to state 132
+    PROG                 go to state 138
     COMMAND              go to state 19
     openIf               go to state 20
     IFBLOCK              go to state 21
@@ -2040,7 +2139,23 @@ State 130
     PRINT_VARIABLE       go to state 33
 
 
-State 131
+State 136
+
+   47 EXPRESSION: EXPRESSION . PLUS EXPRESSION
+   48           | EXPRESSION . MINUS EXPRESSION
+   49           | EXPRESSION . MULTIPLY EXPRESSION
+   50           | EXPRESSION . DIVIDE EXPRESSION
+   65 DECLARATION: ACCESS_MODIFIER DOUBLECOMMA VARIABLE_ID DOUBLECOMMA VARIABLE_TYPE DOUBLECOMMA EXPRESSION DOUBLECOMMA EXPRESSION .
+
+    PLUS      shift, and go to state 58
+    MINUS     shift, and go to state 59
+    MULTIPLY  shift, and go to state 60
+    DIVIDE    shift, and go to state 61
+
+    $default  reduce using rule 65 (DECLARATION)
+
+
+State 137
 
     5 PROG: PROG . COMMAND END
     8     | PROG . IFBLOCK
@@ -2061,15 +2176,15 @@ State 131
     GLOBAL_MODIFIER  shift, and go to state 16
     PIPE             shift, and go to state 17
 
-    VARIABLE_ID  reduce using rule 57 (INDEXING)
+    VARIABLE_ID  reduce using rule 58 (INDEXING)
     DOUBLECOMMA  reduce using rule 62 (ACCESS_MODIFIER)
     $default     reduce using rule 18 (pop)
 
-    COMMAND              go to state 43
-    pop                  go to state 133
+    COMMAND              go to state 44
+    pop                  go to state 139
     openIf               go to state 20
-    IFBLOCK              go to state 44
-    WHILEBLOCK           go to state 45
+    IFBLOCK              go to state 45
+    WHILEBLOCK           go to state 46
     EXPRESSION           go to state 23
     VARIABLE_TYPE        go to state 24
     INDEXING             go to state 25
@@ -2083,7 +2198,7 @@ State 131
     PRINT_VARIABLE       go to state 33
 
 
-State 132
+State 138
 
     5 PROG: PROG . COMMAND END
     8     | PROG . IFBLOCK
@@ -2104,15 +2219,15 @@ State 132
     GLOBAL_MODIFIER  shift, and go to state 16
     PIPE             shift, and go to state 17
 
-    VARIABLE_ID  reduce using rule 57 (INDEXING)
+    VARIABLE_ID  reduce using rule 58 (INDEXING)
     DOUBLECOMMA  reduce using rule 62 (ACCESS_MODIFIER)
     $default     reduce using rule 25 ($@4)
 
-    COMMAND              go to state 43
+    COMMAND              go to state 44
     openIf               go to state 20
-    IFBLOCK              go to state 44
-    $@4                  go to state 134
-    WHILEBLOCK           go to state 45
+    IFBLOCK              go to state 45
+    $@4                  go to state 140
+    WHILEBLOCK           go to state 46
     EXPRESSION           go to state 23
     VARIABLE_TYPE        go to state 24
     INDEXING             go to state 25
@@ -2126,37 +2241,37 @@ State 132
     PRINT_VARIABLE       go to state 33
 
 
-State 133
+State 139
 
    30 WHILEBLOCK: WHILE $@5 L_BOX BOOLEXPRESSION $@6 R_BOX $@7 L_ANGLE push PROG pop . R_ANGLE
 
-    R_ANGLE  shift, and go to state 135
+    R_ANGLE  shift, and go to state 141
 
 
-State 134
+State 140
 
    26 IFBLOCK: openIf captureExpression push continueIf L_ANGLE pop push R_ANGLE $@3 PROG $@4 . R_ANGLE pop
 
-    R_ANGLE  shift, and go to state 136
+    R_ANGLE  shift, and go to state 142
 
 
-State 135
+State 141
 
    30 WHILEBLOCK: WHILE $@5 L_BOX BOOLEXPRESSION $@6 R_BOX $@7 L_ANGLE push PROG pop R_ANGLE .
 
     $default  reduce using rule 30 (WHILEBLOCK)
 
 
-State 136
+State 142
 
    26 IFBLOCK: openIf captureExpression push continueIf L_ANGLE pop push R_ANGLE $@3 PROG $@4 R_ANGLE . pop
 
     $default  reduce using rule 18 (pop)
 
-    pop  go to state 137
+    pop  go to state 143
 
 
-State 137
+State 143
 
    26 IFBLOCK: openIf captureExpression push continueIf L_ANGLE pop push R_ANGLE $@3 PROG $@4 R_ANGLE pop .
 

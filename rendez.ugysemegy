@@ -13,12 +13,14 @@ fesztegyet [ i < n - 1 ]
     j=i+1;
     fesztegyet [ j < n ]
     <
-        vajon[ |j|tomb < |i|tomb  ]
+        vajon[ |j|tomb < |i|tomb]
         <
-            |j|tomb <-> |i|tomb;        
+            |j|tomb <-> |i|tomb;   
+                  
         >
         j=j+1;
+        kiir: i*j;
     >
     i=i+1;
 >
-kiir tomb:1=>n/2;
+kiir tomb:0->n;
